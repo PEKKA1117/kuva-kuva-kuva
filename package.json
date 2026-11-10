@@ -1,6 +1,7 @@
 {
   "name": "kuva-week",
   "private": true,
+  "license": "CC-BY-4.0",
   "type": "module",
   "scripts": {
     "build": "./build.sh",
