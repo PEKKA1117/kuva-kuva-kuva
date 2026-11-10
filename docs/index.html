@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Warframe 每週限購赤毒（Kuva）來源清單：勾掉買過的，看週一重置前還剩哪些沒領。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="本週赤毒 · Kuva This Week">
+<meta property="og:description" content="每週限購的赤毒來源一覽，勾掉買過的，看重置前還剩多少。">
+<meta property="og:url" content="https://pekka1117.github.io/kuva-kuva-kuva/">
+<meta property="og:image" content="https://pekka1117.github.io/kuva-kuva-kuva/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+<title>Kuva This Week</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="theme-init.js"></script>
+
+<div class="wrap">
+  <header class="top">
+    <div class="bar">
+      <div class="eyebrow" data-t="eyebrow"></div>
+      <div class="ctrls">
+        <div class="seg theme" role="group" id="theme-group">
+          <button type="button" id="theme-auto" data-theme-set="auto" data-t="theme-auto"></button>
+          <button type="button" id="theme-light" data-theme-set="light" data-t="theme-light"></button>
+          <button type="button" id="theme-dark" data-theme-set="dark" data-t="theme-dark"></button>
+        </div>
+        <div class="seg lang" role="group" aria-label="Language">
+          <button type="button" id="lang-en" data-lang="en">EN</button>
+          <button type="button" id="lang-zh" data-lang="zh">中文</button>
+        </div>
+      </div>
+    </div>
+    <h1 data-t="title"></h1>
+    <p class="muted lede" data-t="lede"></p>
+  </header>
+
+  <section class="summary" aria-live="polite">
+    <div class="tally">
+      <div class="label" data-t="left"></div>
+      <div class="big num"><span class="ge" id="left-ge"></span><span id="left-n"></span> <span class="unit" data-t="unit"></span></div>
+      <div class="muted small" id="left-of"></div>
+      <div class="meter" aria-hidden="true"><div class="fill" id="meter-fill"></div></div>
+      <div class="small stats"><span id="src-left"></span><span id="claimed"></span><span id="skipped-out"></span></div>
+    </div>
+    <div class="clock">
+      <div class="label" id="week-of"></div>
+      <div class="countdown num" id="reset-in"></div>
+      <div class="muted small" id="reset-at"></div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <label class="check"><input type="checkbox" id="hide-done"> <span data-t="hide-done"></span></label>
+    <span class="toast small" id="toast" role="status"></span>
+    <button type="button" class="ghost" id="reset-week" data-t="reset"></button>
+  </div>
+
+  <section class="sec">
+    <div class="sec-head"><h2 data-t="h-vendors"></h2><span class="small muted" data-t="h-vendors-sub"></span></div>
+    <div class="list" id="list-vendors"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><h2 data-t="h-weekly"></h2><span class="small muted" data-t="h-weekly-sub"></span></div>
+    <div class="list" id="list-weekly"></div>
+  </section>
+
+  <section class="sec" id="sec-skipped" hidden>
+    <div class="sec-head"><h2 id="h-skipped"></h2><span class="small muted" data-t="h-skipped-sub"></span></div>
+    <div class="list skipped" id="list-skipped"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><h2 data-t="h-extra"></h2><span class="small muted" data-t="h-extra-sub"></span></div>
+    <ul class="extras" id="extras"></ul>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head"><h2 data-t="h-runs"></h2><span class="small muted" data-t="h-runs-sub"></span></div>
+    <div class="table-scroll">
+      <table class="runs">
+        <thead>
+          <tr>
+            <th scope="col" rowspan="2" data-t="col-res"></th>
+            <th scope="col" rowspan="2" class="num" data-t="col-need"></th>
+            <th scope="col" rowspan="2" data-t="col-run"></th>
+            <th scope="colgroup" colspan="2" class="num" data-t="col-naive"></th>
+            <th scope="colgroup" colspan="2" class="num" data-t="col-shown"></th>
+            <th scope="colgroup" colspan="2" class="num" data-t="col-mean"></th>
+            <th scope="colgroup" colspan="2" class="num" data-t="col-q90"></th>
+          </tr>
+          <tr class="sub">
+            <th scope="col" class="num" data-t="col-n"></th><th scope="col" class="num sp" data-t="col-sp"></th>
+            <th scope="col" class="num" data-t="col-n"></th><th scope="col" class="num sp" data-t="col-sp"></th>
+            <th scope="col" class="num" data-t="col-n"></th><th scope="col" class="num sp" data-t="col-sp"></th>
+            <th scope="col" class="num" data-t="col-n"></th><th scope="col" class="num sp" data-t="col-sp"></th>
+          </tr>
+        </thead>
+        <tbody id="runs-body"></tbody>
+      </table>
+    </div>
+    <div class="small muted runs-note" data-t="runs-note" data-html></div>
+  </section>
+
+  <footer class="foot small muted" data-t="foot" data-html></footer>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

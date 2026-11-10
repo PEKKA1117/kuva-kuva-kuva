@@ -1,0 +1,23 @@
+# 本週赤毒 · Kuva This Week
+
+https://pekka1117.github.io/kuva-kuva-kuva/
+
+Warframe 每週限購的 Kuva 來源清單。買過的打勾，就看得到週一重置前還剩多少 Kuva 沒領。進度存在瀏覽器的 localStorage，跨週（UTC 週一 00:00）自動歸零；還沒解鎖或不打算買的來源可以「略過」，跨週保留、不算進總數。
+
+每個來源也列出解鎖條件、花費資源的取得方式、每次掉落量與期望值；頁底的表格算出湊滿一次購買要跑幾次（真期望與 90% 分位，`src/calc.ts` 逐一算所有掉落順序）。
+
+A checklist of Warframe's weekly-capped Kuva sources. Tick off what you bought and see what's left before the Monday reset.
+
+## 資料
+
+來源、價格與每週上限取自 [wiki Kuva (Resource) § Vendor Sources](https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources)，2026-11-11 擷取，寫死在 `src/data.ts`。wiki 改版時更新那個檔案即可；`id` 是存檔 key，不要改。
+
+## 開發
+
+結構與 `../riven-splice` 相同：執行時無相依套件，TypeScript 與 esbuild 只在建置時使用。
+
+- `index.html`：頁面 markup，是沒有 doctype/head 的片段（artifact 用）
+- `src/main.ts`：渲染與事件；`data.ts` 是 wiki 資料與掉落量，`calc.ts` 是期望次數計算，`week.ts` 是週次計算，`state.ts` 是存檔，`i18n.ts` 是介面文字
+- `src/theme-init.ts`：阻塞式腳本，畫面繪製前套用主題
+
+`./build.sh` 會先跑 `tsc` 型別檢查，再用 esbuild 打包，並把 `index.html` 包成完整文件輸出到 `docs/`（GitHub Pages 從 `main` 分支的 `/docs` 發布）。發布 artifact 時，`docs/` 裡的 `main.js`、`theme-init.js`、`style.css` 要跟 `index.html` 一起帶上。

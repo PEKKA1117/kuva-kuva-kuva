@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="k" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF6B7F"/>
+      <stop offset="1" stop-color="#8E0F26"/>
+    </linearGradient>
+  </defs>
+  <!-- Kuva 液滴：尖頂水滴 -->
+  <path d="M32 4 C40 18 52 30 52 41 A20 20 0 0 1 12 41 C12 30 24 18 32 4 Z" fill="url(#k)" stroke="#3A0710" stroke-width="3" stroke-linejoin="round"/>
+  <!-- 反光 -->
+  <path d="M23 40 C23 34 26 29 30 24" fill="none" stroke="#FFD3DA" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+</svg>

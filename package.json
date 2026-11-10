@@ -1,0 +1,13 @@
+{
+  "name": "kuva-week",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "./build.sh",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
