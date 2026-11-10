@@ -14,8 +14,8 @@
     fergo: R("Fergolyte", "鐵光晶", { run: W("Deepmines bounty (incl. 5 composted mushrooms, 1 per stage)", "深谷賞金（含 5 朵蘑菇堆肥，每階段 1 朵）"), base: 5, min: 11, max: 15, minSP: 15, maxSP: 19 }),
     // 完成獎勵 15（鋼韌 25）＋ 12 顆氣球各 2–4（鋼韌 3–6）
     atra: R("Atramentum", "黯墨", { run: W("Follie’s Hunt", "Follie 的狩獵"), base: 15, baseSP: 25, dice: 12, min: 2, max: 4, minSP: 3, maxSP: 6 }),
-    crimson: R("Crimson Talent", "赤紅天賦", { run: W("Scoria’s Angel", "Scoria’s Angel"), min: 12, max: 16, minSP: 18, maxSP: 22 }),
-    emerald: R("Emerald Talent", "翠綠天賦", { run: W("The Kuva Wytch", "The Kuva Wytch"), min: 12, max: 16, minSP: 18, maxSP: 22 }),
+    crimson: R("Crimson Talent", "赤紅天賦", { run: W("Scoria’s Angel", "火燼天使"), min: 12, max: 16, minSP: 18, maxSP: 22 }),
+    emerald: R("Emerald Talent", "翠綠天賦", { run: W("The Kuva Wytch", "赤毒魔女"), min: 12, max: 16, minSP: 18, maxSP: 22 }),
     cryobell: { name: W("Cryobell", "冰鈴珠"), wiki: "Icebind" },
     // 每週在承體峰領 3 個，最多存 6 個
     entropic: R("Entropic Kuva", "熵變赤毒", { run: W("Entropic Eximus kill", "熵變卓越者擊殺"), min: 3, max: 5 })
@@ -115,9 +115,9 @@
       cost: [{ n: 35, item: RES.crimson }, { n: 35, item: RES.emerald }],
       vendor: W("Hunhow", "Hunhow"),
       vendorWiki: "Hunhow",
-      where: W("Pontis Tower, Uranus", "天王星 龐提斯塔"),
+      where: W("Pontis Tower, Uranus", "天王星 龐堤斯塔"),
       req: [W("Jade Shadows: Constellations quest", "完成系列任務《翠玉遺影：眾星》")],
-      get: W("Two assassinations in Uranus Proxima: Scoria’s Angel for Crimson, The Kuva Wytch for Emerald.", "天王星比鄰星的兩關刺殺任務：Scoria’s Angel 掉赤紅，The Kuva Wytch 掉翠綠。")
+      get: W("Two assassinations in Uranus Proxima: Scoria’s Angel for Crimson, The Kuva Wytch for Emerald.", "天王星比鄰星的兩關刺殺任務：火燼天使掉赤紅，赤毒魔女掉翠綠。")
     },
     {
       id: "melica",
