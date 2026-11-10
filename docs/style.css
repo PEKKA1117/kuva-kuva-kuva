@@ -626,85 +626,38 @@ button:disabled {
   }
 }
 .sister {
-  --sis-bg: #FFFFFF;
-  --sis-ink: #14121F;
-  --sis-ink2: #4D4A63;
-  --sis-rule: #D3D0E6;
   --sis: #6E4BC4;
   --sis-soft: #E9E3FA;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme=light]) .sister {
-    --sis-bg: #18152A;
-    --sis-ink: #E2DFF0;
-    --sis-ink2: #A09BB8;
-    --sis-rule: #262238;
     --sis: #9F85E8;
     --sis-soft: #2A2245;
   }
 }
 :root[data-theme=dark] .sister {
-  --sis-bg: #18152A;
-  --sis-ink: #E2DFF0;
-  --sis-ink2: #A09BB8;
-  --sis-rule: #262238;
   --sis: #9F85E8;
   --sis-soft: #2A2245;
 }
 .sister {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 16px;
-  row-gap: 2px;
+  display: inline-flex;
   align-items: center;
-  padding: 14px 18px;
-  background: var(--sis-bg);
-  color: var(--sis-ink);
+  gap: 5px;
+  padding: 6px 12px;
+  font: 700 13px/1.55 "Chakra Petch", var(--f-display);
+  color: var(--sis);
+  border: 1px solid var(--sis);
+  border-radius: 6px;
   text-decoration: none;
-  border: 1px solid var(--sis-rule);
-  border-left: 4px solid var(--sis);
-  border-radius: 10px;
 }
 .sister:hover {
-  border-color: var(--sis);
   background: var(--sis-soft);
 }
 .sister:focus-visible {
   outline-color: var(--sis);
 }
-.sis-kicker {
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--sis);
-}
-.sis-title {
-  font-family: "Chakra Petch", var(--f-display);
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 1.15;
-}
-.sis-desc {
-  font-size: 13px;
-  color: var(--sis-ink2);
-  text-wrap: pretty;
-}
-.sis-go {
-  grid-column: 2;
-  grid-row: 1 / span 3;
-  font-size: 22px;
-  color: var(--sis);
-}
 @media (prefers-reduced-motion: no-preference) {
   .sister {
-    transition: background-color .12s, border-color .12s;
-  }
-  .sister .sis-go {
-    transition: transform .12s;
-  }
-  .sister:hover .sis-go {
-    transform: translateX(3px);
+    transition: background-color .12s;
   }
 }
