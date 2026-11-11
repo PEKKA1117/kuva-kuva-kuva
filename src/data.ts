@@ -62,7 +62,7 @@ export const VENDORS: Source[] = [
     get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、Empyrean 任務、30 級以上卓越者（2%）。") },
   { id: "yonta", kuva: 35000, limit: 1, cost: [{ n: 5, item: RES.pinion }],
     vendor: W("Archimedean Yonta", "哲士 Yonta"), vendorWiki: "Archimedean Yonta", where: W("Chrysalith, Zariman", "扎里曼 蛹巖"),
-    get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta交換（每 8 小時一個）。") },
+    get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。") },
   { id: "teshin", kuva: 10000, limit: 25, cost: [{ n: 15, item: RES.steel }],
     vendor: W("Teshin", "Teshin"), vendorWiki: "Teshin", where: W("Conclave room, any relay", "各中繼站"),
     get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "鋼韌難度：每日 Incursion 每個 5 個（一天 6 個），侍僧每隻 2 個。") },

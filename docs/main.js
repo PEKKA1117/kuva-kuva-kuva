@@ -39,7 +39,7 @@
       vendor: W("Archimedean Yonta", "哲士 Yonta"),
       vendorWiki: "Archimedean Yonta",
       where: W("Chrysalith, Zariman", "扎里曼 蛹巖"),
-      get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta交換（每 8 小時一個）。")
+      get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。")
     },
     {
       id: "teshin",
