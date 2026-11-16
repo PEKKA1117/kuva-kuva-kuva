@@ -20,6 +20,15 @@
     // 每週在承體峰領 3 個，最多存 6 個
     entropic: R("Entropic Kuva", "熵變赤毒", { run: W("Entropic Eximus kill", "熵變卓越者擊殺"), min: 3, max: 5 })
   };
+  var HUBS = {
+    ironwake: W("Iron Wake, Earth", "地球 鋼鐵防線"),
+    zariman: W("Zariman Ten Zero", "扎里曼號"),
+    relay: W("Any relay", "各中繼站"),
+    hollvania: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
+    fortuna: W("Fortuna, Venus", "金星 福爾圖娜"),
+    pontis: W("Pontis Tower, Uranus", "天王星 龐堤斯塔"),
+    yuvan: W("Yuvan Peak, Earth", "地球 承體峰")
+  };
   var VENDORS = [
     {
       id: "palladino",
@@ -28,7 +37,7 @@
       cost: [{ n: 10, item: RES.sliver }],
       vendor: W("Palladino", "Palladino"),
       vendorWiki: "Palladino",
-      where: W("Iron Wake, Earth", "地球 鋼鐵防線"),
+      hub: "ironwake",
       get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、Empyrean 任務、30 級以上卓越者（2%）。")
     },
     {
@@ -38,7 +47,8 @@
       cost: [{ n: 5, item: RES.pinion }],
       vendor: W("Archimedean Yonta", "哲士 Yonta"),
       vendorWiki: "Archimedean Yonta",
-      where: W("Chrysalith, Zariman", "扎里曼 蛹巖"),
+      hub: "zariman",
+      where: W("Chrysalith", "蛹巖"),
       get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。")
     },
     {
@@ -48,7 +58,8 @@
       cost: [{ n: 15, item: RES.steel }],
       vendor: W("Teshin", "Teshin"),
       vendorWiki: "Teshin",
-      where: W("Conclave room, any relay", "各中繼站"),
+      hub: "relay",
+      where: W("Conclave room", "武形秘儀區"),
       get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "鋼韌難度：每日 Incursion 每個 5 個（一天 6 個），侍僧每隻 2 個。")
     },
     {
@@ -58,7 +69,8 @@
       cost: [{ n: 10, item: RES.pathos }],
       vendor: W("Acrithis", "言錄使"),
       vendorWiki: "Acrithis",
-      where: W("Dormizone", "扎里曼 寢區／渡域"),
+      hub: "zariman",
+      where: W("Dormizone", "寢區"),
       req: [W("The Duviri Paradox quest", "完成系列任務《The Duviri Paradox》")],
       get: W("The Orowyrm chest in Duviri, or the Isleweaver boss chest.", "渡域 Orowyrm 寶箱，或織島者的頭目寶箱。")
     },
@@ -69,7 +81,7 @@
       cost: [{ n: 100, item: RES.heart }],
       vendor: W("Flare", "弗萊爾（Temple）"),
       vendorWiki: "Flare",
-      where: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
+      hub: "hollvania",
       req: [W("The Hex Rank 4 · Hot & Fresh", "集團 六煞 達到 4 級")],
       get: W("Stage Defense in Höllvania.", "霍爾瓦尼亞 舞台防禦任務。")
     },
@@ -80,7 +92,8 @@
       cost: [{ n: 25, item: RES.husk }],
       vendor: W("Acrithis", "言錄使"),
       vendorWiki: "Acrithis",
-      where: W("Dormizone", "扎里曼 寢區／渡域"),
+      hub: "zariman",
+      where: W("Dormizone", "寢區"),
       req: [W("The Hex quest", "完成系列任務《六煞》")],
       get: W("Isleweaver in Duviri.", "渡域 織島者任務。")
     },
@@ -91,7 +104,7 @@
       cost: [{ n: 75, item: RES.fergo }],
       vendor: W("Nightcap", "睡帽"),
       vendorWiki: "Nightcap",
-      where: W("Fortuna, Venus", "金星 福爾圖娜"),
+      hub: "fortuna",
       req: [
         W("The New War quest", "完成系列任務《新紀之戰》"),
         W("Nightcap Rank 3 · Seeker (analyze mushrooms for his Field Guide)", "集團 睡帽 達到 3 級（提交各元素蘑菇集滿圖鑑）")
@@ -105,7 +118,7 @@
       cost: [{ n: 500, item: RES.atra }],
       vendor: W("Aspirant Zorba", "見習仲裁者佐巴"),
       vendorWiki: "Aspirant Zorba",
-      where: W("Any relay", "各中繼站"),
+      hub: "relay",
       get: W("Follie’s Hunt at Vesper Relay, Venus.", "金星 Vesper 中斷站—Follie 的狩獵。")
     },
     {
@@ -115,7 +128,7 @@
       cost: [{ n: 35, item: RES.crimson }, { n: 35, item: RES.emerald }],
       vendor: W("Hunhow", "Hunhow"),
       vendorWiki: "Hunhow",
-      where: W("Pontis Tower, Uranus", "天王星 龐堤斯塔"),
+      hub: "pontis",
       req: [W("Jade Shadows: Constellations quest", "完成系列任務《翠玉遺影：眾星》")],
       get: W("Two assassinations in Uranus Proxima: Scoria’s Angel for Crimson, The Kuva Wytch for Emerald.", "天王星比鄰星的兩關刺殺任務：火燼天使掉赤紅，赤毒魔女掉翠綠。")
     },
@@ -126,7 +139,8 @@
       cost: [{ n: 150, item: RES.entropic }],
       vendor: W("Cephalon Melica", "中樞 Melica"),
       vendorWiki: "Cephalon Melica",
-      where: W("Yuvan Peak or Zariman Ten Zero", "地球 承體峰／扎里曼 蛹巖"),
+      hub: "zariman",
+      where: W("Chrysalith (also at Yuvan Peak, Earth)", "蛹巖（地球 承體峰也有）"),
       get: W("Entropic Eximus units on the Zariman.", "扎里曼的熵變卓越者。")
     }
   ];
@@ -138,7 +152,8 @@
       cost: [],
       vendor: W("The Circuit (Steel Path)", "無盡坐牢（鋼韌難度）"),
       vendorWiki: "The Circuit",
-      where: W("Duviri", "扎里曼 寢區／渡域"),
+      hub: "zariman",
+      where: W("Dormizone → Duviri", "寢區 → 渡域"),
       note: W("Pick Kuva as the Tier 5 or Tier 10 reward. Tiers 1–4 and 6–9 can roll more.", "自選 5 級或 10 級獎勵。1–4、6–9 級獎勵有機會再多赤毒。")
     },
     {
@@ -149,7 +164,7 @@
       cost: [{ n: 1, item: RES.cryobell }],
       vendor: W("Icebind", "冰縛任務"),
       vendorWiki: "Icebind",
-      where: W("Yuvan Peak, Earth", "地球 承體峰"),
+      hub: "yuvan",
       req: [
         W("Angels of the Zariman quest", "完成系列任務《扎里曼的天使》"),
         W("Whispers in the Walls quest", "完成系列任務《牆中低語》"),
@@ -320,6 +335,7 @@
     "h-extra": "Not tracked",
     "h-extra-sub": "No cap, chance-based, or not every week.",
     "per-week": (n) => `× ${n} a week`,
+    "hub-left": (t) => `${t} left here`,
     each: "each",
     "cost-left": (s) => `${s} left to spend`,
     done: "Done",
@@ -390,6 +406,7 @@
     "h-extra": "不追蹤",
     "h-extra-sub": "不限次數、靠機率，或不是每週都有。",
     "per-week": (n) => `× ${n} 次／週`,
+    "hub-left": (t) => `這裡還剩 ${t}`,
     each: "每次",
     "cost-left": (s) => `還要花 ${s}`,
     done: "已領",
@@ -603,6 +620,10 @@
     return `<a href="${wikiUrl(s.vendorWiki)}" target="_blank" rel="noopener">${nm(s.vendor)}</a>`;
   }
   var ge = (s) => s.atLeast ? "≥ " : "";
+  var whereTag = (s, withHub) => {
+    const parts = [withHub ? nm(HUBS[s.hub]) : "", s.where ? nm(s.where) : ""].filter(Boolean);
+    return parts.length ? ` <span class="where muted">· ${parts.join(" · ")}</span>` : "";
+  };
   function row(s) {
     const n = count(s), done = n >= s.limit, left = leftOf(s), name = nm(s.vendor);
     const costEach = s.cost.length ? `${costLinks(s)} <span class="muted">${tr("each")}</span>` : "";
@@ -620,7 +641,7 @@
       <div class="per num muted">${ge(s)}${fmt(s.kuva)} ${tr("per-week", s.limit)}</div>
     </div>
     <div class="info">
-      <div class="who">${vendorName(s)} <span class="where muted">· ${nm(s.where)}</span></div>
+      <div class="who">${vendorName(s)}${whereTag(s, false)}</div>
       ${costEach ? `<div class="cost small">${costEach}${costLeft ? " · " + costLeft : ""}</div>` : ""}
       ${s.req ? `<div class="req small muted"><span class="tag">${tr("needs")}</span>${s.req.map(nm).join("<br>")}</div>` : ""}
       ${s.get ? `<div class="req small muted"><span class="tag">${tr("get")}</span>${nm(s.get)}</div>` : ""}
@@ -637,15 +658,31 @@
   }
   function skippedRow(s) {
     return `<article class="src mini" data-id="${s.id}">
-    <div class="who">${vendorName(s)} <span class="where muted">· ${nm(s.where)}</span></div>
+    <div class="who">${vendorName(s)}${whereTag(s, true)}</div>
     <div class="per num muted">${ge(s)}${fmt(s.kuva * s.limit)} ${tr("unit")}</div>
     <button type="button" class="ghost" data-act="unskip" aria-label="${tr("unskip-label", nm(s.vendor))}">${tr("unskip")}</button>
   </article>`;
   }
+  function grouped(list, vis) {
+    const groups = /* @__PURE__ */ new Map();
+    for (const s of list) groups.set(s.hub, [...groups.get(s.hub) ?? [], s]);
+    return [...groups].map(([hub, all]) => {
+      const shown = all.filter(vis);
+      if (!shown.length) return "";
+      const active = all.filter((s) => !isSkipped(s));
+      const left = active.reduce((a, s) => a + leftOf(s), 0);
+      const approx = active.some((s) => s.atLeast && count(s) < s.limit) ? "≥ " : "";
+      const name = nm(HUBS[hub]);
+      return `<div class="hub" role="group" aria-label="${name}">
+      <div class="hub-head"><h3>${name}</h3><span class="small num ${left ? "" : "muted"}">${left ? tr("hub-left", approx + fmt(left)) : `✓ ${tr("done")}`}</span></div>
+      ${shown.map(row).join("")}
+    </div>`;
+    }).join("");
+  }
   function renderLists() {
     const vis = (s) => !isSkipped(s) && !(st.hideDone && count(s) >= s.limit);
-    $("list-vendors").innerHTML = VENDORS.filter(vis).map(row).join("");
-    $("list-weekly").innerHTML = WEEKLY.filter(vis).map(row).join("");
+    $("list-vendors").innerHTML = grouped(VENDORS, vis);
+    $("list-weekly").innerHTML = grouped(WEEKLY, vis);
     const sk = ALL.filter(isSkipped);
     $("sec-skipped").hidden = sk.length === 0;
     $("h-skipped").textContent = tr("h-skipped", sk.length);

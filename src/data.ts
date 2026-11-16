@@ -41,6 +41,18 @@ const RES = {
 
 export interface Cost { n: number; item: Res }
 
+// 地圖（同一張圖裡的商人在畫面上聚成一組；組的順序照各組第一個來源在清單裡出現的順序）
+export const HUBS = {
+  ironwake: W("Iron Wake, Earth", "地球 鋼鐵防線"),
+  zariman: W("Zariman Ten Zero", "扎里曼號"),
+  relay: W("Any relay", "各中繼站"),
+  hollvania: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
+  fortuna: W("Fortuna, Venus", "金星 福爾圖娜"),
+  pontis: W("Pontis Tower, Uranus", "天王星 龐堤斯塔"),
+  yuvan: W("Yuvan Peak, Earth", "地球 承體峰"),
+} satisfies Record<string, Named>;
+export type Hub = keyof typeof HUBS;
+
 export interface Source {
   id: string;            // localStorage 的 key，改了會讓使用者的進度消失
   kuva: number;          // 每次得到的 Kuva（atLeast 時為保底值）
@@ -49,59 +61,60 @@ export interface Source {
   cost: Cost[];          // 每次的花費
   vendor: Named;
   vendorWiki: string;    // wiki 頁面名稱
-  where: Named;
+  hub: Hub;              // 在哪張地圖
+  where?: Named;         // 地圖裡的細分位置（蛹巖、寢區…），沒有就只顯示地圖
   req?: Named[];         // 解鎖條件
   get?: Named;           // 花費的資源去哪裡拿
   note?: Named;
 }
 
-// 每週有上限的商店，順序照 wiki
+// 每週有上限的商店，順序照 wiki（畫面上再依 hub 分組）
 export const VENDORS: Source[] = [
   { id: "palladino", kuva: 35000, limit: 1, cost: [{ n: 10, item: RES.sliver }],
-    vendor: W("Palladino", "Palladino"), vendorWiki: "Palladino", where: W("Iron Wake, Earth", "地球 鋼鐵防線"),
+    vendor: W("Palladino", "Palladino"), vendorWiki: "Palladino", hub: "ironwake",
     get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、Empyrean 任務、30 級以上卓越者（2%）。") },
   { id: "yonta", kuva: 35000, limit: 1, cost: [{ n: 5, item: RES.pinion }],
-    vendor: W("Archimedean Yonta", "哲士 Yonta"), vendorWiki: "Archimedean Yonta", where: W("Chrysalith, Zariman", "扎里曼 蛹巖"),
+    vendor: W("Archimedean Yonta", "哲士 Yonta"), vendorWiki: "Archimedean Yonta", hub: "zariman", where: W("Chrysalith", "蛹巖"),
     get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。") },
   { id: "teshin", kuva: 10000, limit: 25, cost: [{ n: 15, item: RES.steel }],
-    vendor: W("Teshin", "Teshin"), vendorWiki: "Teshin", where: W("Conclave room, any relay", "各中繼站"),
+    vendor: W("Teshin", "Teshin"), vendorWiki: "Teshin", hub: "relay", where: W("Conclave room", "武形秘儀區"),
     get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "鋼韌難度：每日 Incursion 每個 5 個（一天 6 個），侍僧每隻 2 個。") },
   { id: "acrithis-pathos", kuva: 10000, limit: 1, cost: [{ n: 10, item: RES.pathos }],
-    vendor: W("Acrithis", "言錄使"), vendorWiki: "Acrithis", where: W("Dormizone", "扎里曼 寢區／渡域"),
+    vendor: W("Acrithis", "言錄使"), vendorWiki: "Acrithis", hub: "zariman", where: W("Dormizone", "寢區"),
     req: [W("The Duviri Paradox quest", "完成系列任務《The Duviri Paradox》")],
     get: W("The Orowyrm chest in Duviri, or the Isleweaver boss chest.", "渡域 Orowyrm 寶箱，或織島者的頭目寶箱。") },
   { id: "flare", kuva: 14000, limit: 3, cost: [{ n: 100, item: RES.heart }],
-    vendor: W("Flare", "弗萊爾（Temple）"), vendorWiki: "Flare", where: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
+    vendor: W("Flare", "弗萊爾（Temple）"), vendorWiki: "Flare", hub: "hollvania",
     req: [W("The Hex Rank 4 · Hot & Fresh", "集團 六煞 達到 4 級")],
     get: W("Stage Defense in Höllvania.", "霍爾瓦尼亞 舞台防禦任務。") },
   { id: "acrithis-scuttler", kuva: 14000, limit: 3, cost: [{ n: 25, item: RES.husk }],
-    vendor: W("Acrithis", "言錄使"), vendorWiki: "Acrithis", where: W("Dormizone", "扎里曼 寢區／渡域"),
+    vendor: W("Acrithis", "言錄使"), vendorWiki: "Acrithis", hub: "zariman", where: W("Dormizone", "寢區"),
     req: [W("The Hex quest", "完成系列任務《六煞》")],
     get: W("Isleweaver in Duviri.", "渡域 織島者任務。") },
   { id: "nightcap", kuva: 14000, limit: 3, cost: [{ n: 75, item: RES.fergo }],
-    vendor: W("Nightcap", "睡帽"), vendorWiki: "Nightcap", where: W("Fortuna, Venus", "金星 福爾圖娜"),
+    vendor: W("Nightcap", "睡帽"), vendorWiki: "Nightcap", hub: "fortuna",
     req: [W("The New War quest", "完成系列任務《新紀之戰》"),
       W("Nightcap Rank 3 · Seeker (analyze mushrooms for his Field Guide)", "集團 睡帽 達到 3 級（提交各元素蘑菇集滿圖鑑）")],
     get: W("Deepmines bounties on Venus. Once a mushroom is fully analyzed in Nightcap’s Field Guide, you can compost it for 1 Fergolyte each.", "金星深谷賞金。睡帽圖鑑裡完整分析過的蘑菇可以拿去堆肥，每朵換 1 個鐵光晶。") },
   { id: "zorba", kuva: 6000, limit: 7, cost: [{ n: 500, item: RES.atra }],
-    vendor: W("Aspirant Zorba", "見習仲裁者佐巴"), vendorWiki: "Aspirant Zorba", where: W("Any relay", "各中繼站"),
+    vendor: W("Aspirant Zorba", "見習仲裁者佐巴"), vendorWiki: "Aspirant Zorba", hub: "relay",
     get: W("Follie’s Hunt at Vesper Relay, Venus.", "金星 Vesper 中斷站—Follie 的狩獵。") },
   { id: "hunhow", kuva: 17000, limit: 3, cost: [{ n: 35, item: RES.crimson }, { n: 35, item: RES.emerald }],
-    vendor: W("Hunhow", "Hunhow"), vendorWiki: "Hunhow", where: W("Pontis Tower, Uranus", "天王星 龐堤斯塔"),
+    vendor: W("Hunhow", "Hunhow"), vendorWiki: "Hunhow", hub: "pontis",
     req: [W("Jade Shadows: Constellations quest", "完成系列任務《翠玉遺影：眾星》")],
     get: W("Two assassinations in Uranus Proxima: Scoria’s Angel for Crimson, The Kuva Wytch for Emerald.", "天王星比鄰星的兩關刺殺任務：火燼天使掉赤紅，赤毒魔女掉翠綠。") },
   { id: "melica", kuva: 10500, limit: 4, cost: [{ n: 150, item: RES.entropic }],
-    vendor: W("Cephalon Melica", "中樞 Melica"), vendorWiki: "Cephalon Melica", where: W("Yuvan Peak or Zariman Ten Zero", "地球 承體峰／扎里曼 蛹巖"),
+    vendor: W("Cephalon Melica", "中樞 Melica"), vendorWiki: "Cephalon Melica", hub: "zariman", where: W("Chrysalith (also at Yuvan Peak, Earth)", "蛹巖（地球 承體峰也有）"),
     get: W("Entropic Eximus units on the Zariman.", "扎里曼的熵變卓越者。") },
 ];
 
 // 不是商店、但同樣每週有次數的來源
 export const WEEKLY: Source[] = [
   { id: "circuit-sp", kuva: 20000, limit: 1, cost: [],
-    vendor: W("The Circuit (Steel Path)", "無盡坐牢（鋼韌難度）"), vendorWiki: "The Circuit", where: W("Duviri", "扎里曼 寢區／渡域"),
+    vendor: W("The Circuit (Steel Path)", "無盡坐牢（鋼韌難度）"), vendorWiki: "The Circuit", hub: "zariman", where: W("Dormizone → Duviri", "寢區 → 渡域"),
     note: W("Pick Kuva as the Tier 5 or Tier 10 reward. Tiers 1–4 and 6–9 can roll more.", "自選 5 級或 10 級獎勵。1–4、6–9 級獎勵有機會再多赤毒。") },
   { id: "icebind", kuva: 7500, atLeast: true, limit: 3, cost: [{ n: 1, item: RES.cryobell }],
-    vendor: W("Icebind", "冰縛任務"), vendorWiki: "Icebind", where: W("Yuvan Peak, Earth", "地球 承體峰"),
+    vendor: W("Icebind", "冰縛任務"), vendorWiki: "Icebind", hub: "yuvan",
     req: [W("Angels of the Zariman quest", "完成系列任務《扎里曼的天使》"),
       W("Whispers in the Walls quest", "完成系列任務《牆中低語》"),
       W("Elite Deep Archimedea or Elite Temporal Archimedea unlocked", "解鎖火衛二解剖聖堂 精英深度探研，或霍爾瓦尼亞商場 精英時光探研")],

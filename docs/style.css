@@ -317,6 +317,34 @@ button:disabled {
 .list:empty {
   display: none;
 }
+.hub {
+  display: grid;
+  gap: 8px;
+}
+.hub + .hub {
+  margin-top: 10px;
+}
+.hub-head {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 2px 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.hub-head h3 {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.hub-head .num:not(.muted) {
+  color: var(--accent);
+}
 .src {
   display: grid;
   grid-template-columns: 9.5rem minmax(0, 1fr) auto;

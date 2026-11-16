@@ -1,5 +1,5 @@
 // 進入點：畫面渲染與事件
-import { ALL, EXTRAS, VENDORS, WEEKLY, wikiUrl, type Source } from "./data";
+import { ALL, EXTRAS, HUBS, VENDORS, WEEKLY, wikiUrl, type Hub, type Source } from "./data";
 import { hasSP, mean, runs, span, type Runs } from "./calc";
 import { $, closest } from "./dom";
 import { lang, nm, restoreLang, setLang, tr } from "./i18n";
@@ -98,6 +98,12 @@ function vendorName(s: Source): string {
 
 const ge = (s: Source): string => s.atLeast ? "≥ " : "";
 
+// 卡片上的位置：分組標題已經寫了地圖，卡片只寫細分位置；略過清單沒有分組，兩個都寫
+const whereTag = (s: Source, withHub: boolean): string => {
+  const parts = [withHub ? nm(HUBS[s.hub]) : "", s.where ? nm(s.where) : ""].filter(Boolean);
+  return parts.length ? ` <span class="where muted">· ${parts.join(" · ")}</span>` : "";
+};
+
 function row(s: Source): string {
   const n = count(s), done = n >= s.limit, left = leftOf(s), name = nm(s.vendor);
   const costEach = s.cost.length ? `${costLinks(s)} <span class="muted">${tr("each")}</span>` : "";
@@ -117,7 +123,7 @@ function row(s: Source): string {
       <div class="per num muted">${ge(s)}${fmt(s.kuva)} ${tr("per-week", s.limit)}</div>
     </div>
     <div class="info">
-      <div class="who">${vendorName(s)} <span class="where muted">· ${nm(s.where)}</span></div>
+      <div class="who">${vendorName(s)}${whereTag(s, false)}</div>
       ${costEach ? `<div class="cost small">${costEach}${costLeft ? " · " + costLeft : ""}</div>` : ""}
       ${s.req ? `<div class="req small muted"><span class="tag">${tr("needs")}</span>${s.req.map(nm).join("<br>")}</div>` : ""}
       ${s.get ? `<div class="req small muted"><span class="tag">${tr("get")}</span>${nm(s.get)}</div>` : ""}
@@ -135,16 +141,34 @@ function row(s: Source): string {
 
 function skippedRow(s: Source): string {
   return `<article class="src mini" data-id="${s.id}">
-    <div class="who">${vendorName(s)} <span class="where muted">· ${nm(s.where)}</span></div>
+    <div class="who">${vendorName(s)}${whereTag(s, true)}</div>
     <div class="per num muted">${ge(s)}${fmt(s.kuva * s.limit)} ${tr("unit")}</div>
     <button type="button" class="ghost" data-act="unskip" aria-label="${tr("unskip-label", nm(s.vendor))}">${tr("unskip")}</button>
   </article>`;
 }
 
+// 同一張地圖的來源聚成一組，組的順序照各組第一個來源出現的順序；整組都看不到時連標題一起省略
+function grouped(list: Source[], vis: (s: Source) => boolean): string {
+  const groups = new Map<Hub, Source[]>();
+  for (const s of list) groups.set(s.hub, [...groups.get(s.hub) ?? [], s]);
+  return [...groups].map(([hub, all]) => {
+    const shown = all.filter(vis);
+    if (!shown.length) return "";
+    const active = all.filter(s => !isSkipped(s));
+    const left = active.reduce((a, s) => a + leftOf(s), 0);
+    const approx = active.some(s => s.atLeast && count(s) < s.limit) ? "≥ " : "";
+    const name = nm(HUBS[hub]);
+    return `<div class="hub" role="group" aria-label="${name}">
+      <div class="hub-head"><h3>${name}</h3><span class="small num ${left ? "" : "muted"}">${left ? tr("hub-left", approx + fmt(left)) : `✓ ${tr("done")}`}</span></div>
+      ${shown.map(row).join("")}
+    </div>`;
+  }).join("");
+}
+
 function renderLists(): void {
   const vis = (s: Source): boolean => !isSkipped(s) && !(st.hideDone && count(s) >= s.limit);
-  $("list-vendors").innerHTML = VENDORS.filter(vis).map(row).join("");
-  $("list-weekly").innerHTML = WEEKLY.filter(vis).map(row).join("");
+  $("list-vendors").innerHTML = grouped(VENDORS, vis);
+  $("list-weekly").innerHTML = grouped(WEEKLY, vis);
   const sk = ALL.filter(isSkipped);
   $("sec-skipped").hidden = sk.length === 0;
   $("h-skipped").textContent = tr("h-skipped", sk.length);
