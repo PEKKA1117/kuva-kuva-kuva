@@ -60,7 +60,7 @@
       vendorWiki: "Teshin",
       hub: "relay",
       where: W("Conclave room", "武形秘儀區"),
-      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。")
+      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度追隨者每隻 2 個。")
     },
     // 鋼韌之路的輪替商品 8 週一輪，2026-11-16 那週是赤毒（api.warframestat.us/pc/steelPath 確認）
     {
@@ -73,7 +73,7 @@
       hub: "relay",
       where: W("Conclave room", "武形秘儀區"),
       cycle: { every: 8, anchor: "2026-11-16" },
-      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。"),
+      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度追隨者每隻 2 個。"),
       note: W("The rotating offer is Kuva only once every 8 weeks, and this is one of them. It leaves the list when the week ends.", "輪替商品每八週才輪到赤毒一次，這週剛好是。過了這週會從清單消失。")
     },
     {
