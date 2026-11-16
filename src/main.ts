@@ -216,13 +216,14 @@ function renderSummary(): void {
   const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
   // 有保底制的來源（冰縛）還沒領完時，總數只是下限
   const approx = active.some(s => s.atLeast && count(s) < s.limit) ? "≥ " : "";
-  $("left-ge").textContent = approx;
-  $("left-n").textContent = fmt(left);
   const unknown = active.some(s => unfilled(s) > 0);  // 已完成但沒填實際值
-  $("left-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
-  $("meter-fill").style.width = total ? `${(left / total) * 100}%` : "0%";  // 紅條 = 還剩的部分
+  // 大數字是本週已領；冰縛有沒填實際值的次數時只是下限
+  $("got-ge").textContent = unknown ? "≥ " : "";
+  $("got-n").textContent = fmt(claimed);
+  $("got-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
+  $("meter-fill").style.width = total ? `${(claimed / total) * 100}%` : "0%";  // 紅條 = 已領的部分
   $("src-left").textContent = open ? tr("src-left", open) : tr("all-done");
-  $("claimed").textContent = tr("claimed", (unknown ? "≥ " : "") + fmt(claimed));
+  $("left").textContent = left ? tr("left", approx + fmt(left)) : "";
   $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
 }
 

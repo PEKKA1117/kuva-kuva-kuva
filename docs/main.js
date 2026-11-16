@@ -320,11 +320,11 @@
     "week-of": (a, b) => `Week of ${a} – ${b} (UTC)`,
     "reset-in": (d, h, m) => `Resets in ${d ? `${d}d ` : ""}${h}h ${m}m`,
     "reset-at": (t) => `Monday 00:00 UTC · ${t} your time`,
-    left: "Still to claim",
+    "got-head": "Claimed this week",
     of: (t) => `of ${t} this week`,
     "src-left": (n) => n === 1 ? "1 source not finished" : `${n} sources not finished`,
     "all-done": "Everything claimed. See you after reset.",
-    claimed: (t) => `${t} claimed`,
+    left: (t) => `${t} still to claim`,
     "skipped-out": (t) => `${t} left out by skipped sources`,
     "h-vendors": "Vendors",
     "h-vendors-sub": "Capped per week. Amounts are per purchase.",
@@ -394,11 +394,11 @@
     "week-of": (a, b) => `本週 ${a} – ${b}（UTC）`,
     "reset-in": (d, h, m) => `${d ? `${d} 天 ` : ""}${h} 小時 ${m} 分後重置`,
     "reset-at": (t) => `UTC 週一 00:00・你的時間 ${t}`,
-    left: "還沒領",
+    "got-head": "本週已領",
     of: (t) => `本週共 ${t}`,
     "src-left": (n) => `還有 ${n} 個來源沒領完`,
     "all-done": "全部領完了，重置後見。",
-    claimed: (t) => `已領 ${t}`,
+    left: (t) => `還沒領 ${t}`,
     "skipped-out": (t) => `略過的來源不計：${t}`,
     "h-vendors": "商店",
     "h-vendors-sub": "每週限購，赤毒數量為單次購買。",
@@ -730,13 +730,13 @@
     const open = active.filter((s) => count(s) < s.limit).length;
     const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
     const approx = active.some((s) => s.atLeast && count(s) < s.limit) ? "≥ " : "";
-    $("left-ge").textContent = approx;
-    $("left-n").textContent = fmt(left);
     const unknown = active.some((s) => unfilled(s) > 0);
-    $("left-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
-    $("meter-fill").style.width = total ? `${left / total * 100}%` : "0%";
+    $("got-ge").textContent = unknown ? "≥ " : "";
+    $("got-n").textContent = fmt(claimed);
+    $("got-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
+    $("meter-fill").style.width = total ? `${claimed / total * 100}%` : "0%";
     $("src-left").textContent = open ? tr("src-left", open) : tr("all-done");
-    $("claimed").textContent = tr("claimed", (unknown ? "≥ " : "") + fmt(claimed));
+    $("left").textContent = left ? tr("left", approx + fmt(left)) : "";
     $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
   }
   function renderClock() {
