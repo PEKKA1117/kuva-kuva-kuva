@@ -24,7 +24,7 @@ const R = (en: string, zh: string, farm?: Farm): Res => ({ name: W(en, zh), wiki
 // 資源名稱與掉落量
 const RES = {
   sliver: R("Riven Sliver", "裂罅Mod碎片", { run: W("Eximus kill (level 30+)", "30 級以上卓越者擊殺"), min: 1, max: 1, chance: 0.02 }),
-  pinion: R("Voidplume Pinion", "虛空翔羽", { run: W("Zariman mission", "扎里曼號任務"), min: 1, max: 1 }),
+  pinion: R("Voidplume Pinion", "虛空翔羽", { run: W("Zariman mission", "札日曼號任務"), min: 1, max: 1 }),
   steel: R("Steel Essence", "鋼韌精華", { run: W("Steel Path Incursion", "每日鋼韌侵襲"), min: 5, max: 5 }),
   pathos: R("Pathos Clamp", "悲愴箍", { run: W("Orowyrm chest", "奧金絞龍寶箱"), min: 10, max: 10, minSP: 15, maxSP: 15 }),
   heart: R("Beating Heartstrings", "跳動心弦", { run: W("Stage Defense rotation", "舞台防禦輪次"), min: 4, max: 9, minSP: 7, maxSP: 12 }),
@@ -44,7 +44,7 @@ export interface Cost { n: number; item: Res }
 // 地圖（同一張圖裡的商人在畫面上聚成一組；組的順序照各組第一個來源在清單裡出現的順序）
 export const HUBS = {
   ironwake: W("Iron Wake, Earth", "地球 鋼鐵防線"),
-  zariman: W("Zariman Ten Zero", "扎里曼號"),
+  zariman: W("Zariman Ten Zero", "札日曼號"),
   relay: W("Any relay", "各中繼站"),
   hollvania: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
   fortuna: W("Fortuna, Venus", "金星 福爾圖娜"),
@@ -75,7 +75,7 @@ export const VENDORS: Source[] = [
     get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、前哨戰任務、30 級以上卓越者（2%）。") },
   { id: "yonta", kuva: 35000, limit: 1, cost: [{ n: 5, item: RES.pinion }],
     vendor: W("Archimedean Yonta", "哲士 Yonta"), vendorWiki: "Archimedean Yonta", hub: "zariman", where: W("Chrysalith", "蛹巖"),
-    get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。") },
+    get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "札日曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。") },
   { id: "teshin", kuva: 10000, limit: 25, cost: [{ n: 15, item: RES.steel }],
     vendor: W("Teshin", "Teshin"), vendorWiki: "Teshin", hub: "relay", where: W("Conclave room", "武形秘儀區"),
     get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。") },
@@ -105,7 +105,7 @@ export const VENDORS: Source[] = [
     get: W("Two assassinations in Uranus Proxima: Scoria’s Angel for Crimson, The Kuva Wytch for Emerald.", "天王星比鄰星的兩關刺殺任務：火燼天使掉赤紅，赤毒魔女掉翠綠。") },
   { id: "melica", kuva: 10500, limit: 4, cost: [{ n: 150, item: RES.entropic }],
     vendor: W("Cephalon Melica", "中樞 Melica"), vendorWiki: "Cephalon Melica", hub: "zariman", where: W("Chrysalith (also at Yuvan Peak, Earth)", "蛹巖（地球 承體峰也有）"),
-    get: W("Entropic Eximus units on the Zariman.", "扎里曼的熵變卓越者。") },
+    get: W("Entropic Eximus units on the Zariman.", "札日曼的熵變卓越者。") },
 ];
 
 // 不是商店、但同樣每週有次數的來源
@@ -115,7 +115,7 @@ export const WEEKLY: Source[] = [
     note: W("Pick Kuva as the Tier 5 or Tier 10 reward. Tiers 1–4 and 6–9 can roll more.", "自選 5 級或 10 級獎勵。1–4、6–9 級獎勵有機會再多赤毒。") },
   { id: "icebind", kuva: 7500, atLeast: true, limit: 3, cost: [{ n: 1, item: RES.cryobell }],
     vendor: W("Icebind", "冰縛任務"), vendorWiki: "Icebind", hub: "yuvan",
-    req: [W("Angels of the Zariman quest", "完成系列任務《扎里曼的天使》"),
+    req: [W("Angels of the Zariman quest", "完成系列任務《札日曼的天使》"),
       W("Whispers in the Walls quest", "完成系列任務《牆中低語》"),
       W("Elite Deep Archimedea or Elite Temporal Archimedea unlocked", "解鎖火衛二解剖聖堂 精英深度探研，或霍爾瓦尼亞商場 精英時光探研")],
     get: W("Pick up 3 Cryobells at Yuvan Peak each weekly reset; you can hold up to 6. With a stock saved from earlier weeks you can run it up to 9 times in one week; this tracker counts the 3 new ones.",

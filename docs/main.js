@@ -5,7 +5,7 @@
   var R = (en2, zh2, farm) => ({ name: W(en2, zh2), wiki: en2, farm });
   var RES = {
     sliver: R("Riven Sliver", "裂罅Mod碎片", { run: W("Eximus kill (level 30+)", "30 級以上卓越者擊殺"), min: 1, max: 1, chance: 0.02 }),
-    pinion: R("Voidplume Pinion", "虛空翔羽", { run: W("Zariman mission", "扎里曼號任務"), min: 1, max: 1 }),
+    pinion: R("Voidplume Pinion", "虛空翔羽", { run: W("Zariman mission", "札日曼號任務"), min: 1, max: 1 }),
     steel: R("Steel Essence", "鋼韌精華", { run: W("Steel Path Incursion", "每日鋼韌侵襲"), min: 5, max: 5 }),
     pathos: R("Pathos Clamp", "悲愴箍", { run: W("Orowyrm chest", "奧金絞龍寶箱"), min: 10, max: 10, minSP: 15, maxSP: 15 }),
     heart: R("Beating Heartstrings", "跳動心弦", { run: W("Stage Defense rotation", "舞台防禦輪次"), min: 4, max: 9, minSP: 7, maxSP: 12 }),
@@ -22,7 +22,7 @@
   };
   var HUBS = {
     ironwake: W("Iron Wake, Earth", "地球 鋼鐵防線"),
-    zariman: W("Zariman Ten Zero", "扎里曼號"),
+    zariman: W("Zariman Ten Zero", "札日曼號"),
     relay: W("Any relay", "各中繼站"),
     hollvania: W("Höllvania Central Mall", "霍爾瓦尼亞 商場"),
     fortuna: W("Fortuna, Venus", "金星 福爾圖娜"),
@@ -49,7 +49,7 @@
       vendorWiki: "Archimedean Yonta",
       hub: "zariman",
       where: W("Chrysalith", "蛹巖"),
-      get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "扎里曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。")
+      get: W("Kill the dormant Void Angel in a Zariman mission, or trade with Yonta (one every 8 hours).", "札日曼號任務中擊殺虛空天使，或與哲士 Yonta 交換（每 8 小時一個）。")
     },
     {
       id: "teshin",
@@ -141,7 +141,7 @@
       vendorWiki: "Cephalon Melica",
       hub: "zariman",
       where: W("Chrysalith (also at Yuvan Peak, Earth)", "蛹巖（地球 承體峰也有）"),
-      get: W("Entropic Eximus units on the Zariman.", "扎里曼的熵變卓越者。")
+      get: W("Entropic Eximus units on the Zariman.", "札日曼的熵變卓越者。")
     }
   ];
   var WEEKLY = [
@@ -166,7 +166,7 @@
       vendorWiki: "Icebind",
       hub: "yuvan",
       req: [
-        W("Angels of the Zariman quest", "完成系列任務《扎里曼的天使》"),
+        W("Angels of the Zariman quest", "完成系列任務《札日曼的天使》"),
         W("Whispers in the Walls quest", "完成系列任務《牆中低語》"),
         W("Elite Deep Archimedea or Elite Temporal Archimedea unlocked", "解鎖火衛二解剖聖堂 精英深度探研，或霍爾瓦尼亞商場 精英時光探研")
       ],
