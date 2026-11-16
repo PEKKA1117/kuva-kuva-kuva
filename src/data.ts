@@ -66,6 +66,7 @@ export interface Source {
   req?: Named[];         // 解鎖條件
   get?: Named;           // 花費的資源去哪裡拿
   note?: Named;
+  cycle?: { every: number; anchor: string };  // 每 every 週才輪到一次；anchor 是某個輪到週的週一（UTC）
 }
 
 // 每週有上限的商店，順序照 wiki（畫面上再依 hub 分組）
@@ -79,6 +80,12 @@ export const VENDORS: Source[] = [
   { id: "teshin", kuva: 10000, limit: 25, cost: [{ n: 15, item: RES.steel }],
     vendor: W("Teshin", "Teshin"), vendorWiki: "Teshin", hub: "relay", where: W("Conclave room", "武形秘儀區"),
     get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。") },
+  // 鋼韌之路的輪替商品 8 週一輪，2026-11-16 那週是赤毒（api.warframestat.us/pc/steelPath 確認）
+  { id: "teshin-rotation", kuva: 50000, limit: 1, cost: [{ n: 55, item: RES.steel }],
+    vendor: W("Teshin (rotating offer)", "Teshin（輪替商品）"), vendorWiki: "The Steel Path", hub: "relay", where: W("Conclave room", "武形秘儀區"),
+    cycle: { every: 8, anchor: "2026-11-16" },
+    get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。"),
+    note: W("The rotating offer is Kuva only once every 8 weeks, and this is one of them. It leaves the list when the week ends.", "輪替商品每八週才輪到赤毒一次，這週剛好是。過了這週會從清單消失。") },
   { id: "acrithis-pathos", kuva: 10000, limit: 1, cost: [{ n: 10, item: RES.pathos }],
     vendor: W("Acrithis", "言錄使"), vendorWiki: "Acrithis", hub: "zariman", where: W("Dormizone", "寢區"),
     req: [W("The Duviri Paradox quest", "完成系列任務《The Duviri Paradox》")],
@@ -127,13 +134,13 @@ export const WEEKLY: Source[] = [
 export const ALL: Source[] = [...VENDORS, ...WEEKLY];
 
 // 只列出、不追蹤的來源（不限次數，或靠機率、輪替）
-export interface Extra { kuva: string; what: Named; wiki: string }
+export interface Extra { kuva: string; what: Named; wiki: string; src?: string }  // src：輪到時改列在上方清單的來源 id
 export const EXTRAS: Extra[] = [
   { kuva: "10,000", wiki: "Nightwave/Offerings",
     what: W("Nightwave Offerings, 50 Nightwave Credits each. Credits per season are limited; rank rewards also give Kuva.", "午夜電波，50 代幣換一次（每期代幣獲得量有限）。等級獎勵也有赤毒。") },
   { kuva: "10,000", wiki: "Arbitrations",
     what: W("Arbitrations vendor, 25 Vitus Essence each. No limit; the Arbitration changes every hour.", "仲裁商店，生息精華 25 個換一次，不限次數。仲裁每小時換一關。") },
-  { kuva: "50,000", wiki: "The_Steel_Path",
+  { kuva: "50,000", wiki: "The_Steel_Path", src: "teshin-rotation",
     what: W("Teshin’s Steel Path Honors, 55 Steel Essence. In the rotation once every 8 weeks.", "Teshin，鋼韌精華 55 個換一次。每八週輪到一次。") },
   { kuva: "35,000", wiki: "Void_Surplus",
     what: W("Void Surplus from Baro Ki’Teer (every two weeks), possible reward.", "虛空商人（每兩週出現）的剩餘品，有機會開到。") },

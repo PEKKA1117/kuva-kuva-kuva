@@ -62,6 +62,20 @@
       where: W("Conclave room", "武形秘儀區"),
       get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。")
     },
+    // 鋼韌之路的輪替商品 8 週一輪，2026-11-16 那週是赤毒（api.warframestat.us/pc/steelPath 確認）
+    {
+      id: "teshin-rotation",
+      kuva: 5e4,
+      limit: 1,
+      cost: [{ n: 55, item: RES.steel }],
+      vendor: W("Teshin (rotating offer)", "Teshin（輪替商品）"),
+      vendorWiki: "The Steel Path",
+      hub: "relay",
+      where: W("Conclave room", "武形秘儀區"),
+      cycle: { every: 8, anchor: "2026-11-16" },
+      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。"),
+      note: W("The rotating offer is Kuva only once every 8 weeks, and this is one of them. It leaves the list when the week ends.", "輪替商品每八週才輪到赤毒一次，這週剛好是。過了這週會從清單消失。")
+    },
     {
       id: "acrithis-pathos",
       kuva: 1e4,
@@ -195,6 +209,7 @@
     {
       kuva: "50,000",
       wiki: "The_Steel_Path",
+      src: "teshin-rotation",
       what: W("Teshin’s Steel Path Honors, 55 Steel Essence. In the rotation once every 8 weeks.", "Teshin，鋼韌精華 55 個換一次。每八週輪到一次。")
     },
     {
@@ -325,6 +340,7 @@
     "src-left": (n) => n === 1 ? "1 source not finished" : `${n} sources not finished`,
     "all-done": "Everything claimed. See you after reset.",
     left: (t) => `${t} still to claim`,
+    "next-cycle": (d, n) => ` Next up the week of ${d} (in ${n} week${n === 1 ? "" : "s"}).`,
     "skipped-out": (t) => `${t} left out by skipped sources`,
     "h-vendors": "Vendors",
     "h-vendors-sub": "Capped per week. Amounts are per purchase.",
@@ -399,6 +415,7 @@
     "src-left": (n) => `還有 ${n} 個來源沒領完`,
     "all-done": "全部領完了，重置後見。",
     left: (t) => `還沒領 ${t}`,
+    "next-cycle": (d, n) => `下次輪到 ${d} 那週（還有 ${n} 週）。`,
     "skipped-out": (t) => `略過的來源不計：${t}`,
     "h-vendors": "商店",
     "h-vendors-sub": "每週限購，赤毒數量為單次購買。",
@@ -490,6 +507,10 @@
   }
   var nextReset = (now) => weekStart(now) + 7 * DAY;
   var weekKey = (now) => new Date(weekStart(now)).toISOString().slice(0, 10);
+  function cycleIn(now, anchor, every) {
+    const weeks = Math.round((weekStart(now) - Date.parse(anchor + "T00:00:00Z")) / (7 * DAY));
+    return (-weeks % every + every) % every;
+  }
   function untilReset(now) {
     const mins = Math.ceil((nextReset(now) - now) / 6e4);
     return { d: Math.floor(mins / 1440), h: Math.floor(mins % 1440 / 60), m: mins % 60 };
@@ -563,6 +584,8 @@
   if (rollover(st, Date.now())) save(st);
   var count = (s) => Math.min(st.counts[s.id] ?? 0, s.limit);
   var isSkipped = (s) => st.skip.includes(s.id);
+  var weeksUntil = (s) => s.cycle ? cycleIn(Date.now(), s.cycle.anchor, s.cycle.every) : 0;
+  var live = (s) => weeksUntil(s) === 0;
   var leftOf = (s) => (s.limit - count(s)) * s.kuva;
   var gotOf = (s, i) => st.got[s.id]?.[i] ?? 0;
   var filledOf = (s) => (st.got[s.id] ?? []).filter((v) => v > 0);
@@ -597,7 +620,7 @@
   function renderRunsTable() {
     const seen = /* @__PURE__ */ new Set();
     const rows = [];
-    for (const s of ALL) for (const c of s.cost) {
+    for (const s of ALL.filter(live)) for (const c of s.cost) {
       const f = c.item.farm;
       const key = `${c.item.wiki}:${c.n}`;
       if (!f || seen.has(key)) continue;
@@ -715,20 +738,20 @@
   }
   function renderLists() {
     const vis = (s) => !isSkipped(s) && !(st.hideDone && count(s) >= s.limit);
-    $("list-vendors").innerHTML = grouped(VENDORS, vis);
-    $("list-weekly").innerHTML = grouped(WEEKLY, vis);
-    const sk = ALL.filter(isSkipped);
+    $("list-vendors").innerHTML = grouped(VENDORS.filter(live), vis);
+    $("list-weekly").innerHTML = grouped(WEEKLY.filter(live), vis);
+    const sk = ALL.filter((s) => live(s) && isSkipped(s));
     $("sec-skipped").hidden = sk.length === 0;
     $("h-skipped").textContent = tr("h-skipped", sk.length);
     $("list-skipped").innerHTML = sk.map(skippedRow).join("");
   }
   function renderSummary() {
-    const active = ALL.filter((s) => !isSkipped(s));
+    const active = ALL.filter((s) => live(s) && !isSkipped(s));
     const left = active.reduce((a, s) => a + leftOf(s), 0);
     const claimed = active.reduce((a, s) => a + claimedOf(s), 0);
     const total = claimed + left;
     const open = active.filter((s) => count(s) < s.limit).length;
-    const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
+    const skippedOut = ALL.filter((s) => live(s) && isSkipped(s)).reduce((a, s) => a + leftOf(s), 0);
     const approx = active.some((s) => s.atLeast && count(s) < s.limit) ? "≥ " : "";
     const unknown = active.some((s) => unfilled(s) > 0);
     $("got-ge").textContent = unknown ? "≥ " : "";
@@ -739,14 +762,16 @@
     $("left").textContent = left ? tr("left", approx + fmt(left)) : "";
     $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
   }
+  var DAY2 = 864e5;
+  var WEEK = 7 * DAY2;
+  var md = (t) => {
+    const d = new Date(t);
+    return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+  };
   function renderClock() {
     const now = Date.now();
     const ws = weekStart(now);
-    const md = (t) => {
-      const d = new Date(t);
-      return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
-    };
-    $("week-of").textContent = tr("week-of", md(ws), md(ws + 6 * 864e5));
+    $("week-of").textContent = tr("week-of", md(ws), md(ws + 6 * DAY2));
     const u = untilReset(now);
     $("reset-in").textContent = tr("reset-in", u.d, u.h, u.m);
     const local = new Date(nextReset(now)).toLocaleString(lang === "zh" ? "zh-TW" : "en-US", {
@@ -768,7 +793,12 @@
     $("theme-group").setAttribute("aria-label", tr("theme-group"));
     for (const b of document.querySelectorAll(".lang button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     $("hide-done").checked = st.hideDone;
-    $("extras").innerHTML = EXTRAS.map((x) => `<li><span class="num kv">${x.kuva}</span><span>${nm(x.what)} <a href="${wikiUrl(x.wiki)}" target="_blank" rel="noopener">${tr("vendor-wiki")}</a></span></li>`).join("");
+    $("extras").innerHTML = EXTRAS.map((x) => {
+      const s = x.src ? byId.get(x.src) : void 0;
+      if (s && live(s)) return "";
+      const next = s ? `<span class="muted">${tr("next-cycle", md(weekStart(Date.now()) + weeksUntil(s) * WEEK), weeksUntil(s))}</span>` : "";
+      return `<li><span class="num kv">${x.kuva}</span><span>${nm(x.what)}${next} <a href="${wikiUrl(x.wiki)}" target="_blank" rel="noopener">${tr("vendor-wiki")}</a></span></li>`;
+    }).join("");
     renderRunsTable();
     showTheme();
   }
@@ -898,7 +928,7 @@
   function tick() {
     if (rollover(st, Date.now())) {
       save(st);
-      commit();
+      renderAll();
       toast(tr("new-week"));
     }
     renderClock();

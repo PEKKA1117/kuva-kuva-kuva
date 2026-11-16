@@ -14,6 +14,12 @@ export const nextReset = (now: number): number => weekStart(now) + 7 * DAY;
 // 存檔用的週次 key，例如 "2026-11-09"
 export const weekKey = (now: number): string => new Date(weekStart(now)).toISOString().slice(0, 10);
 
+// 每 every 週輪到一次的來源：距離下一次輪到還有幾週（0 = 本週就是）；anchor 是某個輪到週的週一，例如 "2026-11-16"
+export function cycleIn(now: number, anchor: string, every: number): number {
+  const weeks = Math.round((weekStart(now) - Date.parse(anchor + "T00:00:00Z")) / (7 * DAY));
+  return ((-weeks % every) + every) % every;
+}
+
 // 剩餘時間拆成天、時、分（無條件進位到分，避免顯示 0 分但還沒重置）
 export function untilReset(now: number): { d: number; h: number; m: number } {
   const mins = Math.ceil((nextReset(now) - now) / 60_000);

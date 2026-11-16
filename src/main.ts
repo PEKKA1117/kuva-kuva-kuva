@@ -4,7 +4,7 @@ import { hasSP, mean, runs, span, type Runs } from "./calc";
 import { $, closest } from "./dom";
 import { lang, nm, restoreLang, setLang, tr } from "./i18n";
 import { load, rollover, save, type State } from "./state";
-import { nextReset, untilReset, weekStart } from "./week";
+import { cycleIn, nextReset, untilReset, weekStart } from "./week";
 import { setTheme, showTheme, type Theme } from "./theme";
 
 const fmt = (n: number): string => n.toLocaleString("en-US");
@@ -15,6 +15,9 @@ if (rollover(st, Date.now())) save(st);
 
 const count = (s: Source): number => Math.min(st.counts[s.id] ?? 0, s.limit);
 const isSkipped = (s: Source): boolean => st.skip.includes(s.id);
+// 輪替來源（每 8 週一次）只在輪到的那週出現，其他週不列、不算
+const weeksUntil = (s: Source): number => s.cycle ? cycleIn(Date.now(), s.cycle.anchor, s.cycle.every) : 0;
+const live = (s: Source): boolean => weeksUntil(s) === 0;
 const leftOf = (s: Source): number => (s.limit - count(s)) * s.kuva;
 // 數量不固定的來源（冰縛）：格子 i 填的實際值（沒填 = 0）。格子位置只用來顯示，
 // 計算只看「填了幾格、合計多少」；不變式：完成次數 ≥ 填了的格數
@@ -66,7 +69,7 @@ const runsCache = new Map<string, Runs>();  // 換語言重繪時不用重算
 function renderRunsTable(): void {
   const seen = new Set<string>();
   const rows: string[] = [];
-  for (const s of ALL) for (const c of s.cost) {
+  for (const s of ALL.filter(live)) for (const c of s.cost) {
     const f = c.item.farm;
     const key = `${c.item.wiki}:${c.n}`;
     if (!f || seen.has(key)) continue;
@@ -199,21 +202,21 @@ function grouped(list: Source[], vis: (s: Source) => boolean): string {
 
 function renderLists(): void {
   const vis = (s: Source): boolean => !isSkipped(s) && !(st.hideDone && count(s) >= s.limit);
-  $("list-vendors").innerHTML = grouped(VENDORS, vis);
-  $("list-weekly").innerHTML = grouped(WEEKLY, vis);
-  const sk = ALL.filter(isSkipped);
+  $("list-vendors").innerHTML = grouped(VENDORS.filter(live), vis);
+  $("list-weekly").innerHTML = grouped(WEEKLY.filter(live), vis);
+  const sk = ALL.filter(s => live(s) && isSkipped(s));
   $("sec-skipped").hidden = sk.length === 0;
   $("h-skipped").textContent = tr("h-skipped", sk.length);
   $("list-skipped").innerHTML = sk.map(skippedRow).join("");
 }
 
 function renderSummary(): void {
-  const active = ALL.filter(s => !isSkipped(s));
+  const active = ALL.filter(s => live(s) && !isSkipped(s));
   const left = active.reduce((a, s) => a + leftOf(s), 0);
   const claimed = active.reduce((a, s) => a + claimedOf(s), 0);
   const total = claimed + left;  // 冰縛有填實際值時，總數跟著變大
   const open = active.filter(s => count(s) < s.limit).length;
-  const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
+  const skippedOut = ALL.filter(s => live(s) && isSkipped(s)).reduce((a, s) => a + leftOf(s), 0);
   // 有保底制的來源（冰縛）還沒領完時，總數只是下限
   const approx = active.some(s => s.atLeast && count(s) < s.limit) ? "≥ " : "";
   const unknown = active.some(s => unfilled(s) > 0);  // 已完成但沒填實際值
@@ -227,11 +230,13 @@ function renderSummary(): void {
   $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
 }
 
+const DAY = 86_400_000, WEEK = 7 * DAY;
+const md = (t: number): string => { const d = new Date(t); return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
+
 function renderClock(): void {
   const now = Date.now();
   const ws = weekStart(now);
-  const md = (t: number): string => { const d = new Date(t); return `${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
-  $("week-of").textContent = tr("week-of", md(ws), md(ws + 6 * 86_400_000));
+  $("week-of").textContent = tr("week-of", md(ws), md(ws + 6 * DAY));
   const u = untilReset(now);
   $("reset-in").textContent = tr("reset-in", u.d, u.h, u.m);
   const local = new Date(nextReset(now)).toLocaleString(lang === "zh" ? "zh-TW" : "en-US", {
@@ -249,8 +254,12 @@ function renderStatic(): void {
   $("theme-group").setAttribute("aria-label", tr("theme-group"));
   for (const b of document.querySelectorAll<HTMLElement>(".lang button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
   $<HTMLInputElement>("hide-done").checked = st.hideDone;
-  $("extras").innerHTML = EXTRAS.map(x =>
-    `<li><span class="num kv">${x.kuva}</span><span>${nm(x.what)} <a href="${wikiUrl(x.wiki)}" target="_blank" rel="noopener">${tr("vendor-wiki")}</a></span></li>`).join("");
+  $("extras").innerHTML = EXTRAS.map(x => {
+    const s = x.src ? byId.get(x.src) : undefined;
+    if (s && live(s)) return "";  // 本週輪到，已經列在上方
+    const next = s ? `<span class="muted">${tr("next-cycle", md(weekStart(Date.now()) + weeksUntil(s) * WEEK), weeksUntil(s))}</span>` : "";
+    return `<li><span class="num kv">${x.kuva}</span><span>${nm(x.what)}${next} <a href="${wikiUrl(x.wiki)}" target="_blank" rel="noopener">${tr("vendor-wiki")}</a></span></li>`;
+  }).join("");
   renderRunsTable();
   showTheme();
 }
@@ -355,7 +364,7 @@ function toast(msg: string): void {
 
 // 每 20 秒更新倒數；跨週時歸零（另一個分頁改了進度也一併同步）
 function tick(): void {
-  if (rollover(st, Date.now())) { save(st); commit(); toast(tr("new-week")); }
+  if (rollover(st, Date.now())) { save(st); renderAll(); toast(tr("new-week")); }  // 全部重繪：輪替來源可能進出清單
   renderClock();
 }
 window.setInterval(tick, 20_000);
