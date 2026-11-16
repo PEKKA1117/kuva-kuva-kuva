@@ -6,8 +6,8 @@
   var RES = {
     sliver: R("Riven Sliver", "裂罅Mod碎片", { run: W("Eximus kill (level 30+)", "30 級以上卓越者擊殺"), min: 1, max: 1, chance: 0.02 }),
     pinion: R("Voidplume Pinion", "虛空翔羽", { run: W("Zariman mission", "扎里曼號任務"), min: 1, max: 1 }),
-    steel: R("Steel Essence", "鋼韌精華", { run: W("Steel Path Incursion", "鋼韌難度每日 Incursion"), min: 5, max: 5 }),
-    pathos: R("Pathos Clamp", "悲愴箍", { run: W("Orowyrm chest", "Orowyrm 寶箱"), min: 10, max: 10, minSP: 15, maxSP: 15 }),
+    steel: R("Steel Essence", "鋼韌精華", { run: W("Steel Path Incursion", "每日鋼韌侵襲"), min: 5, max: 5 }),
+    pathos: R("Pathos Clamp", "悲愴箍", { run: W("Orowyrm chest", "奧金絞龍寶箱"), min: 10, max: 10, minSP: 15, maxSP: 15 }),
     heart: R("Beating Heartstrings", "跳動心弦", { run: W("Stage Defense rotation", "舞台防禦輪次"), min: 4, max: 9, minSP: 7, maxSP: 12 }),
     husk: R("Scuttler Husk", "蛛繭", { run: W("Isleweaver run", "織島者任務"), min: 16, max: 20, minSP: 20, maxSP: 24 }),
     // 賞金 11–15（鋼韌 15–19）＋每個階段 1 朵隨機蘑菇 × 5 階段，已完整分析的可各堆肥成 1 個
@@ -38,7 +38,7 @@
       vendor: W("Palladino", "Palladino"),
       vendorWiki: "Palladino",
       hub: "ironwake",
-      get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、Empyrean 任務、30 級以上卓越者（2%）。")
+      get: W("Requiem Relics, Empyrean missions, and Eximus above level 30 (2%).", "開鎮魂遺物、前哨戰任務、30 級以上卓越者（2%）。")
     },
     {
       id: "yonta",
@@ -60,7 +60,7 @@
       vendorWiki: "Teshin",
       hub: "relay",
       where: W("Conclave room", "武形秘儀區"),
-      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "鋼韌難度：每日 Incursion 每個 5 個（一天 6 個），侍僧每隻 2 個。")
+      get: W("Steel Path: 5 per daily Incursion (6 a day), 2 per Acolyte.", "每日鋼韌侵襲每個 5 個（一天 6 個），鋼韌難度侍僧每隻 2 個。")
     },
     {
       id: "acrithis-pathos",
@@ -72,7 +72,7 @@
       hub: "zariman",
       where: W("Dormizone", "寢區"),
       req: [W("The Duviri Paradox quest", "完成系列任務《The Duviri Paradox》")],
-      get: W("The Orowyrm chest in Duviri, or the Isleweaver boss chest.", "渡域 Orowyrm 寶箱，或織島者的頭目寶箱。")
+      get: W("The Orowyrm chest in Duviri, or the Isleweaver boss chest.", "渡域 奧金絞龍寶箱，或織島者的頭目寶箱。")
     },
     {
       id: "flare",
