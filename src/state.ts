@@ -7,11 +7,12 @@ const KEY = "kuva-week-state";
 export interface State {
   week: string;
   counts: Record<string, number>;
+  got: Record<string, number[]>;   // 數量不固定的來源（冰縛）每次實際拿到多少；0 = 沒填，以保底計
   skip: string[];       // 還沒解鎖或不打算買的來源，跨週保留
   hideDone: boolean;
 }
 
-const fresh = (now: number): State => ({ week: weekKey(now), counts: {}, skip: [], hideDone: false });
+const fresh = (now: number): State => ({ week: weekKey(now), counts: {}, got: {}, skip: [], hideDone: false });
 
 export function load(now: number): State {
   try {
@@ -21,9 +22,13 @@ export function load(now: number): State {
     const ids = new Set(ALL.map(x => x.id));
     const counts: Record<string, number> = {};
     for (const [k, v] of Object.entries(s.counts ?? {})) if (ids.has(k) && typeof v === "number") counts[k] = v;
+    const got: Record<string, number[]> = {};
+    for (const [k, v] of Object.entries(s.got ?? {}))
+      if (ids.has(k) && Array.isArray(v)) got[k] = v.map(n => typeof n === "number" && n > 0 ? Math.floor(n) : 0);
     return {
       week: typeof s.week === "string" ? s.week : weekKey(now),
       counts,
+      got,
       skip: Array.isArray(s.skip) ? s.skip.filter(id => ids.has(id)) : [],
       hideDone: s.hideDone === true,
     };
@@ -40,5 +45,6 @@ export function rollover(s: State, now: number): boolean {
   if (s.week === k) return false;
   s.week = k;
   s.counts = {};
+  s.got = {};
   return true;
 }

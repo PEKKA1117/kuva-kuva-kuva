@@ -513,6 +513,31 @@ button:disabled {
 .skip:hover {
   color: var(--ink);
 }
+.got {
+  margin-top: 6px;
+}
+.got-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.got input {
+  width: 7.5em;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--ground);
+  border: 1px solid var(--rule2);
+  border-radius: 6px;
+}
+.got input::placeholder {
+  color: var(--ink3);
+}
+.got input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--accent);
+}
 .src.mini {
   grid-template-columns: minmax(0, 1fr) auto auto;
   padding: 10px 16px;

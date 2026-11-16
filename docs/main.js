@@ -175,8 +175,8 @@
         "每週重置後在承體峰撿 3 個，最多存 6 個。有前幾週存下的話，一週最多可以跑 9 次；這裡只算每週新拿的 3 次。"
       ),
       note: W(
-        "After the ritual, open the chests in the frozen lab. Crested chest 7,500–100,000, plus 1,750–7,000 per side objective (3 per run). Counted here at the 7,500 minimum.",
-        "儀式完成後傳送到冰封實驗室開寶箱。大寶箱 7,500–100,000，每完成一個支線再開小寶箱 1,750–7,000（每次 3 個支線）。這裡以保底 7,500 計。"
+        "After the ritual, open the chests in the frozen lab. Crested chest 7,500–100,000, plus 1,750–7,000 per side objective (3 per run). Type what you got in a box below and the run counts as done; runs ticked without an amount count at the 7,500 minimum.",
+        "儀式完成後傳送到冰封實驗室開寶箱。大寶箱 7,500–100,000，每完成一個支線再開小寶箱 1,750–7,000（每次 3 個支線）。在下方格子填實際拿到多少就算完成一次；只按 + 沒填的以保底 7,500 計。"
       )
     }
   ];
@@ -336,6 +336,9 @@
     "h-extra-sub": "No cap, chance-based, or not every week.",
     "per-week": (n) => `× ${n} a week`,
     "hub-left": (t) => `${t} left here`,
+    "got-tag": "Got",
+    "got-sum": (t) => `= ${t}`,
+    "got-label": (n, i) => `Kuva you got from ${n} run ${i}`,
     each: "each",
     "cost-left": (s) => `${s} left to spend`,
     done: "Done",
@@ -373,7 +376,7 @@
     "col-n": "Normal",
     "col-sp": "Steel Path",
     "runs-note": `<p>One run drops a uniform random amount in the range listed in each card (Atramentum adds up 12 balloons separately), times the drop chance. <b>Cost ÷ expected</b> is the simple estimate, rounded up in the cards. The last run usually overshoots, so the <b>true average</b> number of runs is a little higher; it and the <b>90%</b> column are computed exactly over every possible drop sequence. Extra Talents from the Ramsled phase, Atramentum from enemies, other Riven Sliver sources and Yonta’s Pinion trade are not counted, so real numbers can be lower.</p>`,
-    foot: `<p><b>Source.</b> Amounts, prices and limits from the <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Kuva page on the Warframe wiki</a>, read on 11 Nov 2026. Icebind’s Kuva varies, so totals count its minimum and show “≥”. Vendors change with updates; check the wiki if a number looks off.</p>
+    foot: `<p><b>Source.</b> Amounts, prices and limits from the <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Kuva page on the Warframe wiki</a>, read on 11 Nov 2026. Icebind’s Kuva varies: type what each run gave you and it counts as done; runs left blank count at the minimum and the totals show “≥”. Vendors change with updates; check the wiki if a number looks off.</p>
 <p><b>Reset.</b> Weekly limits reset on Monday at 00:00 UTC. Progress is saved only in this browser, so other devices start from zero.</p>`
   };
   var zh = {
@@ -407,6 +410,9 @@
     "h-extra-sub": "不限次數、靠機率，或不是每週都有。",
     "per-week": (n) => `× ${n} 次／週`,
     "hub-left": (t) => `這裡還剩 ${t}`,
+    "got-tag": "實拿",
+    "got-sum": (t) => `合計 ${t}`,
+    "got-label": (n, i) => `${n} 第 ${i} 次實際拿到的赤毒`,
     each: "每次",
     "cost-left": (s) => `還要花 ${s}`,
     done: "已領",
@@ -448,7 +454,7 @@
     "col-n": "一般",
     "col-sp": "鋼韌",
     "runs-note": `<p>每次掉落量在卡片上的範圍內均勻隨機（黯墨是 12 顆氣球分別疊加），再乘上掉落機率。<b>花費 ÷ 期望</b>是簡化估算，上方卡片顯示的是它無條件進位。最後一次通常會拿超過需要的量，所以<b>真期望</b>次數會略高；真期望和 <b>90%</b> 兩欄是把所有可能的掉落順序逐一算出來的精確值。天賦任務 Ramsled 階段的額外獎勵、黯墨的敵人掉落、裂罅Mod碎片的其他來源、哲士 Yonta 的虛空翔羽交換都沒算進去，實際可能更少。</p>`,
-    foot: `<p><b>來源。</b>數量、價格與購買上限取自 <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Warframe wiki 的 Kuva 頁面</a>，2026 年 11 月 11 日擷取；中文譯名照遊戲繁中版。冰縛任務的赤毒數量不固定，總數以保底計，所以標成「≥」。商店內容會隨改版調整，數字看起來不對時請以 wiki 為準。</p>
+    foot: `<p><b>來源。</b>數量、價格與購買上限取自 <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Warframe wiki 的 Kuva 頁面</a>，2026 年 11 月 11 日擷取；中文譯名照遊戲繁中版。冰縛任務的赤毒數量不固定：在卡片的格子填實際拿到多少就算完成一次，沒填的以保底計，總數標成「≥」。商店內容會隨改版調整，數字看起來不對時請以 wiki 為準。</p>
 <p><b>重置。</b>每週上限在 UTC 週一 00:00（台灣時間週一 08:00）重置。進度只存在這個瀏覽器，換裝置會從零開始。</p>`
   };
   var I18N = { en, zh };
@@ -491,7 +497,7 @@
 
   // src/state.ts
   var KEY = "kuva-week-state";
-  var fresh = (now) => ({ week: weekKey(now), counts: {}, skip: [], hideDone: false });
+  var fresh = (now) => ({ week: weekKey(now), counts: {}, got: {}, skip: [], hideDone: false });
   function load(now) {
     try {
       const raw = localStorage.getItem(KEY);
@@ -500,9 +506,13 @@
       const ids = new Set(ALL.map((x) => x.id));
       const counts = {};
       for (const [k, v] of Object.entries(s.counts ?? {})) if (ids.has(k) && typeof v === "number") counts[k] = v;
+      const got = {};
+      for (const [k, v] of Object.entries(s.got ?? {}))
+        if (ids.has(k) && Array.isArray(v)) got[k] = v.map((n) => typeof n === "number" && n > 0 ? Math.floor(n) : 0);
       return {
         week: typeof s.week === "string" ? s.week : weekKey(now),
         counts,
+        got,
         skip: Array.isArray(s.skip) ? s.skip.filter((id) => ids.has(id)) : [],
         hideDone: s.hideDone === true
       };
@@ -521,6 +531,7 @@
     if (s.week === k) return false;
     s.week = k;
     s.counts = {};
+    s.got = {};
     return true;
   }
 
@@ -553,6 +564,10 @@
   var count = (s) => Math.min(st.counts[s.id] ?? 0, s.limit);
   var isSkipped = (s) => st.skip.includes(s.id);
   var leftOf = (s) => (s.limit - count(s)) * s.kuva;
+  var gotOf = (s, i) => st.got[s.id]?.[i] ?? 0;
+  var filledOf = (s) => (st.got[s.id] ?? []).filter((v) => v > 0);
+  var unfilled = (s) => s.atLeast ? Math.max(count(s) - filledOf(s).length, 0) : 0;
+  var claimedOf = (s) => s.atLeast ? filledOf(s).reduce((a, b) => a + b, 0) + unfilled(s) * s.kuva : count(s) * s.kuva;
   function costText(s, times) {
     return s.cost.map((c) => `${fmt(c.n * times)} ${nm(c.item.name)}`).join(" + ");
   }
@@ -616,6 +631,24 @@
     if (s.limit <= 7) return `<div class="pips" aria-hidden="true">${Array.from({ length: s.limit }, (_, i) => `<i class="${i < n ? "on" : ""}"></i>`).join("")}</div>`;
     return `<div class="pips bar" aria-hidden="true"><i style="width:${n / s.limit * 100}%"></i></div>`;
   }
+  function gotSum(s) {
+    return count(s) ? tr("got-sum", (unfilled(s) ? "≥ " : "") + fmt(claimedOf(s))) : "";
+  }
+  function gotInputs(s) {
+    if (!s.atLeast) return "";
+    const cells = Array.from({ length: s.limit }, (_, i) => {
+      const v = gotOf(s, i);
+      return `<input type="text" inputmode="numeric" class="num" data-got="${i}" value="${v ? fmt(v) : ""}"
+      placeholder="≥ ${fmt(s.kuva)}" aria-label="${tr("got-label", nm(s.vendor), i + 1)}">`;
+    }).join("");
+    return `<div class="req small got"><span class="tag">${tr("got-tag")}</span><span class="got-cells">${cells}<span class="muted got-sum">${gotSum(s)}</span></span></div>`;
+  }
+  function parseKuva(raw) {
+    const t = raw.replace(/[,，\s]/g, "").toLowerCase();
+    const m = /^(\d+(?:\.\d+)?)(k?)$/.exec(t);
+    if (!m) return 0;
+    return Math.min(Math.round(parseFloat(m[1]) * (m[2] ? 1e3 : 1)), 1e6);
+  }
   function vendorName(s) {
     return `<a href="${wikiUrl(s.vendorWiki)}" target="_blank" rel="noopener">${nm(s.vendor)}</a>`;
   }
@@ -649,6 +682,7 @@
       ${exp ? `<div class="req small muted"><span class="tag">${tr("expect")}</span>${exp}</div>` : ""}
       ${s.note ? `<div class="req small muted">${nm(s.note)}</div>` : ""}
       ${pips(s)}
+      ${gotInputs(s)}
     </div>
     <div class="ctl">
       ${ctl}
@@ -690,17 +724,19 @@
   }
   function renderSummary() {
     const active = ALL.filter((s) => !isSkipped(s));
-    const total = active.reduce((a, s) => a + s.kuva * s.limit, 0);
     const left = active.reduce((a, s) => a + leftOf(s), 0);
+    const claimed = active.reduce((a, s) => a + claimedOf(s), 0);
+    const total = claimed + left;
     const open = active.filter((s) => count(s) < s.limit).length;
     const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
     const approx = active.some((s) => s.atLeast && count(s) < s.limit) ? "≥ " : "";
     $("left-ge").textContent = approx;
     $("left-n").textContent = fmt(left);
-    $("left-of").textContent = tr("of", (active.some((s) => s.atLeast) ? "≥ " : "") + fmt(total));
+    const unknown = active.some((s) => unfilled(s) > 0);
+    $("left-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
     $("meter-fill").style.width = total ? `${left / total * 100}%` : "0%";
     $("src-left").textContent = open ? tr("src-left", open) : tr("all-done");
-    $("claimed").textContent = tr("claimed", fmt(total - left));
+    $("claimed").textContent = tr("claimed", (unknown ? "≥ " : "") + fmt(claimed));
     $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
   }
   function renderClock() {
@@ -778,6 +814,14 @@
         st.skip = st.skip.filter((x) => x !== id);
         break;
     }
+    const g = st.got[id];
+    if (g) {
+      for (let i = g.length - 1, extra = filledOf(s).length - count(s); i >= 0 && extra > 0; i--) if (g[i]) {
+        g[i] = 0;
+        extra--;
+      }
+      if (!g.some(Boolean)) delete st.got[id];
+    }
     commit();
     const el = document.querySelector(`[data-id="${id}"] [data-act="${a}"]`) ?? document.querySelector(`[data-id="${id}"] [data-act]:not([disabled])`);
     el?.focus();
@@ -793,6 +837,31 @@
       setLang(lg.dataset.lang);
       renderAll();
     }
+  });
+  document.addEventListener("change", (e) => {
+    const inp = closest(e, "input[data-got]");
+    const card = inp && closest(e, "[data-id]");
+    const s = card?.dataset.id ? byId.get(card.dataset.id) : void 0;
+    if (!inp || !s) return;
+    const i = Number(inp.dataset.got), v = parseKuva(inp.value), was = gotOf(s, i);
+    inp.value = v ? fmt(v) : "";
+    if (v === was) return;
+    const g = st.got[s.id] ?? [];
+    while (g.length <= i) g.push(0);
+    g[i] = v;
+    if (g.some(Boolean)) st.got[s.id] = g;
+    else delete st.got[s.id];
+    const filled = filledOf(s).length;
+    const n = !was ? Math.max(count(s), filled) : !v ? Math.max(count(s) - 1, filled) : count(s);
+    if (n > 0) st.counts[s.id] = Math.min(n, s.limit);
+    else delete st.counts[s.id];
+    window.setTimeout(() => {
+      const a = document.activeElement;
+      const id = a?.closest("[data-id]")?.dataset.id;
+      const sel = id && a?.dataset.got ? `[data-id="${id}"] input[data-got="${a.dataset.got}"]` : id && a?.dataset.act ? `[data-id="${id}"] [data-act="${a.dataset.act}"]` : "";
+      commit();
+      if (sel) document.querySelector(sel)?.focus();
+    }, 0);
   });
   $("hide-done").addEventListener("change", (e) => {
     st.hideDone = e.target.checked;
@@ -816,6 +885,7 @@
     b.textContent = tr("reset");
     b.classList.remove("armed");
     st.counts = {};
+    st.got = {};
     commit();
   });
   function toast(msg) {

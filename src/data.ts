@@ -120,8 +120,8 @@ export const WEEKLY: Source[] = [
       W("Elite Deep Archimedea or Elite Temporal Archimedea unlocked", "解鎖火衛二解剖聖堂 精英深度探研，或霍爾瓦尼亞商場 精英時光探研")],
     get: W("Pick up 3 Cryobells at Yuvan Peak each weekly reset; you can hold up to 6. With a stock saved from earlier weeks you can run it up to 9 times in one week; this tracker counts the 3 new ones.",
       "每週重置後在承體峰撿 3 個，最多存 6 個。有前幾週存下的話，一週最多可以跑 9 次；這裡只算每週新拿的 3 次。"),
-    note: W("After the ritual, open the chests in the frozen lab. Crested chest 7,500–100,000, plus 1,750–7,000 per side objective (3 per run). Counted here at the 7,500 minimum.",
-      "儀式完成後傳送到冰封實驗室開寶箱。大寶箱 7,500–100,000，每完成一個支線再開小寶箱 1,750–7,000（每次 3 個支線）。這裡以保底 7,500 計。") },
+    note: W("After the ritual, open the chests in the frozen lab. Crested chest 7,500–100,000, plus 1,750–7,000 per side objective (3 per run). Type what you got in a box below and the run counts as done; runs ticked without an amount count at the 7,500 minimum.",
+      "儀式完成後傳送到冰封實驗室開寶箱。大寶箱 7,500–100,000，每完成一個支線再開小寶箱 1,750–7,000（每次 3 個支線）。在下方格子填實際拿到多少就算完成一次；只按 + 沒填的以保底 7,500 計。") },
 ];
 
 export const ALL: Source[] = [...VENDORS, ...WEEKLY];

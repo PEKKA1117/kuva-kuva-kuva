@@ -21,6 +21,8 @@ const en = {
   "h-extra": "Not tracked", "h-extra-sub": "No cap, chance-based, or not every week.",
   "per-week": (n: number) => `× ${n} a week`,
   "hub-left": (t: string) => `${t} left here`,
+  "got-tag": "Got", "got-sum": (t: string) => `= ${t}`,
+  "got-label": (n: string, i: number) => `Kuva you got from ${n} run ${i}`,
   each: "each",
   "cost-left": (s: string) => `${s} left to spend`,
   done: "Done", "mark-done": "Mark claimed", undo: "Undo",
@@ -44,7 +46,7 @@ const en = {
   "col-naive": "Cost ÷ expected", "col-shown": "Shown above", "col-mean": "True average", "col-q90": "90% within",
   "col-n": "Normal", "col-sp": "Steel Path",
   "runs-note": `<p>One run drops a uniform random amount in the range listed in each card (Atramentum adds up 12 balloons separately), times the drop chance. <b>Cost ÷ expected</b> is the simple estimate, rounded up in the cards. The last run usually overshoots, so the <b>true average</b> number of runs is a little higher; it and the <b>90%</b> column are computed exactly over every possible drop sequence. Extra Talents from the Ramsled phase, Atramentum from enemies, other Riven Sliver sources and Yonta’s Pinion trade are not counted, so real numbers can be lower.</p>`,
-  foot: `<p><b>Source.</b> Amounts, prices and limits from the <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Kuva page on the Warframe wiki</a>, read on 11 Nov 2026. Icebind’s Kuva varies, so totals count its minimum and show “≥”. Vendors change with updates; check the wiki if a number looks off.</p>
+  foot: `<p><b>Source.</b> Amounts, prices and limits from the <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Kuva page on the Warframe wiki</a>, read on 11 Nov 2026. Icebind’s Kuva varies: type what each run gave you and it counts as done; runs left blank count at the minimum and the totals show “≥”. Vendors change with updates; check the wiki if a number looks off.</p>
 <p><b>Reset.</b> Weekly limits reset on Monday at 00:00 UTC. Progress is saved only in this browser, so other devices start from zero.</p>`,
 };
 type Dict = typeof en;
@@ -71,6 +73,8 @@ const zh: Dict = {
   "h-extra": "不追蹤", "h-extra-sub": "不限次數、靠機率，或不是每週都有。",
   "per-week": (n) => `× ${n} 次／週`,
   "hub-left": (t) => `這裡還剩 ${t}`,
+  "got-tag": "實拿", "got-sum": (t) => `合計 ${t}`,
+  "got-label": (n, i) => `${n} 第 ${i} 次實際拿到的赤毒`,
   each: "每次",
   "cost-left": (s) => `還要花 ${s}`,
   done: "已領", "mark-done": "標為已領", undo: "復原",
@@ -96,7 +100,7 @@ const zh: Dict = {
   "col-naive": "花費 ÷ 期望", "col-shown": "上方顯示", "col-mean": "真期望", "col-q90": "90% 在幾次內",
   "col-n": "一般", "col-sp": "鋼韌",
   "runs-note": `<p>每次掉落量在卡片上的範圍內均勻隨機（黯墨是 12 顆氣球分別疊加），再乘上掉落機率。<b>花費 ÷ 期望</b>是簡化估算，上方卡片顯示的是它無條件進位。最後一次通常會拿超過需要的量，所以<b>真期望</b>次數會略高；真期望和 <b>90%</b> 兩欄是把所有可能的掉落順序逐一算出來的精確值。天賦任務 Ramsled 階段的額外獎勵、黯墨的敵人掉落、裂罅Mod碎片的其他來源、哲士 Yonta 的虛空翔羽交換都沒算進去，實際可能更少。</p>`,
-  foot: `<p><b>來源。</b>數量、價格與購買上限取自 <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Warframe wiki 的 Kuva 頁面</a>，2026 年 11 月 11 日擷取；中文譯名照遊戲繁中版。冰縛任務的赤毒數量不固定，總數以保底計，所以標成「≥」。商店內容會隨改版調整，數字看起來不對時請以 wiki 為準。</p>
+  foot: `<p><b>來源。</b>數量、價格與購買上限取自 <a href="https://wiki.warframe.com/w/Kuva_(Resource)#Vendor_Sources" target="_blank" rel="noopener">Warframe wiki 的 Kuva 頁面</a>，2026 年 11 月 11 日擷取；中文譯名照遊戲繁中版。冰縛任務的赤毒數量不固定：在卡片的格子填實際拿到多少就算完成一次，沒填的以保底計，總數標成「≥」。商店內容會隨改版調整，數字看起來不對時請以 wiki 為準。</p>
 <p><b>重置。</b>每週上限在 UTC 週一 00:00（台灣時間週一 08:00）重置。進度只存在這個瀏覽器，換裝置會從零開始。</p>`,
 };
 

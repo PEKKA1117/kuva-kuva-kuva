@@ -16,6 +16,15 @@ if (rollover(st, Date.now())) save(st);
 const count = (s: Source): number => Math.min(st.counts[s.id] ?? 0, s.limit);
 const isSkipped = (s: Source): boolean => st.skip.includes(s.id);
 const leftOf = (s: Source): number => (s.limit - count(s)) * s.kuva;
+// 數量不固定的來源（冰縛）：格子 i 填的實際值（沒填 = 0）。格子位置只用來顯示，
+// 計算只看「填了幾格、合計多少」；不變式：完成次數 ≥ 填了的格數
+const gotOf = (s: Source, i: number): number => st.got[s.id]?.[i] ?? 0;
+const filledOf = (s: Source): number[] => (st.got[s.id] ?? []).filter(v => v > 0);
+// 已完成但沒填實際值的次數，以保底計
+const unfilled = (s: Source): number => s.atLeast ? Math.max(count(s) - filledOf(s).length, 0) : 0;
+// 已領的量：有填的用實際值，其餘以保底計
+const claimedOf = (s: Source): number =>
+  s.atLeast ? filledOf(s).reduce((a, b) => a + b, 0) + unfilled(s) * s.kuva : count(s) * s.kuva;
 
 // ---------- 渲染 ----------
 
@@ -92,6 +101,28 @@ function pips(s: Source): string {
   return `<div class="pips bar" aria-hidden="true"><i style="width:${(n / s.limit) * 100}%"></i></div>`;
 }
 
+// 數量不固定的來源：每週次數幾次就幾格，一直顯示；在空格填數字就算完成一次
+function gotSum(s: Source): string {
+  return count(s) ? tr("got-sum", (unfilled(s) ? "≥ " : "") + fmt(claimedOf(s))) : "";
+}
+function gotInputs(s: Source): string {
+  if (!s.atLeast) return "";
+  const cells = Array.from({ length: s.limit }, (_, i) => {
+    const v = gotOf(s, i);
+    return `<input type="text" inputmode="numeric" class="num" data-got="${i}" value="${v ? fmt(v) : ""}"
+      placeholder="≥ ${fmt(s.kuva)}" aria-label="${tr("got-label", nm(s.vendor), i + 1)}">`;
+  }).join("");
+  return `<div class="req small got"><span class="tag">${tr("got-tag")}</span><span class="got-cells">${cells}<span class="muted got-sum">${gotSum(s)}</span></span></div>`;
+}
+
+// 解析使用者輸入：允許千分位逗號、空白與 k 結尾（45k = 45,000）；空白或無效回傳 0
+function parseKuva(raw: string): number {
+  const t = raw.replace(/[,，\s]/g, "").toLowerCase();
+  const m = /^(\d+(?:\.\d+)?)(k?)$/.exec(t);
+  if (!m) return 0;
+  return Math.min(Math.round(parseFloat(m[1]) * (m[2] ? 1000 : 1)), 1_000_000);
+}
+
 function vendorName(s: Source): string {
   return `<a href="${wikiUrl(s.vendorWiki)}" target="_blank" rel="noopener">${nm(s.vendor)}</a>`;
 }
@@ -131,6 +162,7 @@ function row(s: Source): string {
       ${exp ? `<div class="req small muted"><span class="tag">${tr("expect")}</span>${exp}</div>` : ""}
       ${s.note ? `<div class="req small muted">${nm(s.note)}</div>` : ""}
       ${pips(s)}
+      ${gotInputs(s)}
     </div>
     <div class="ctl">
       ${ctl}
@@ -177,18 +209,20 @@ function renderLists(): void {
 
 function renderSummary(): void {
   const active = ALL.filter(s => !isSkipped(s));
-  const total = active.reduce((a, s) => a + s.kuva * s.limit, 0);
   const left = active.reduce((a, s) => a + leftOf(s), 0);
+  const claimed = active.reduce((a, s) => a + claimedOf(s), 0);
+  const total = claimed + left;  // 冰縛有填實際值時，總數跟著變大
   const open = active.filter(s => count(s) < s.limit).length;
   const skippedOut = ALL.filter(isSkipped).reduce((a, s) => a + leftOf(s), 0);
   // 有保底制的來源（冰縛）還沒領完時，總數只是下限
   const approx = active.some(s => s.atLeast && count(s) < s.limit) ? "≥ " : "";
   $("left-ge").textContent = approx;
   $("left-n").textContent = fmt(left);
-  $("left-of").textContent = tr("of", (active.some(s => s.atLeast) ? "≥ " : "") + fmt(total));
+  const unknown = active.some(s => unfilled(s) > 0);  // 已完成但沒填實際值
+  $("left-of").textContent = tr("of", (approx || unknown ? "≥ " : "") + fmt(total));
   $("meter-fill").style.width = total ? `${(left / total) * 100}%` : "0%";  // 紅條 = 還剩的部分
   $("src-left").textContent = open ? tr("src-left", open) : tr("all-done");
-  $("claimed").textContent = tr("claimed", fmt(total - left));
+  $("claimed").textContent = tr("claimed", (unknown ? "≥ " : "") + fmt(claimed));
   $("skipped-out").textContent = skippedOut ? tr("skipped-out", fmt(skippedOut)) : "";
 }
 
@@ -240,6 +274,12 @@ function act(id: string, a: string): void {
     case "skip": if (!st.skip.includes(id)) st.skip.push(id); break;
     case "unskip": st.skip = st.skip.filter(x => x !== id); break;
   }
+  // 次數減少到比填了的格數還少時，從最後一格開始清掉
+  const g = st.got[id];
+  if (g) {
+    for (let i = g.length - 1, extra = filledOf(s).length - count(s); i >= 0 && extra > 0; i--) if (g[i]) { g[i] = 0; extra--; }
+    if (!g.some(Boolean)) delete st.got[id];
+  }
   commit();
   // 重繪後把焦點還給同一顆按鈕（或同一列），鍵盤操作才不會跳掉
   const el = document.querySelector<HTMLElement>(`[data-id="${id}"] [data-act="${a}"]`)
@@ -255,6 +295,34 @@ document.addEventListener("click", e => {
   if (th) setTheme(th.dataset.themeSet as Theme);
   const lg = closest(e, "[data-lang]");
   if (lg && (lg.dataset.lang === "en" || lg.dataset.lang === "zh")) { setLang(lg.dataset.lang); renderAll(); }
+});
+
+// 填冰縛實際拿到的量：change（離開欄位或按 Enter）才存。
+// 空格填了數字 → 完成次數 +1（已經用 + 記過、還沒填的那次就不再加）；清空一格 → −1
+document.addEventListener("change", e => {
+  const inp = closest<HTMLInputElement>(e, "input[data-got]");
+  const card = inp && closest(e, "[data-id]");
+  const s = card?.dataset.id ? byId.get(card.dataset.id) : undefined;
+  if (!inp || !s) return;
+  const i = Number(inp.dataset.got), v = parseKuva(inp.value), was = gotOf(s, i);
+  inp.value = v ? fmt(v) : "";
+  if (v === was) return;
+  const g = st.got[s.id] ?? [];
+  while (g.length <= i) g.push(0);
+  g[i] = v;
+  if (g.some(Boolean)) st.got[s.id] = g; else delete st.got[s.id];
+  const filled = filledOf(s).length;
+  const n = !was ? Math.max(count(s), filled) : !v ? Math.max(count(s) - 1, filled) : count(s);
+  if (n > 0) st.counts[s.id] = Math.min(n, s.limit); else delete st.counts[s.id];
+  // 等焦點移到下一個欄位（Tab）之後再重繪，重繪後把焦點放回同一個位置
+  window.setTimeout(() => {
+    const a = document.activeElement as HTMLElement | null;
+    const id = a?.closest<HTMLElement>("[data-id]")?.dataset.id;
+    const sel = id && a?.dataset.got ? `[data-id="${id}"] input[data-got="${a.dataset.got}"]`
+      : id && a?.dataset.act ? `[data-id="${id}"] [data-act="${a.dataset.act}"]` : "";
+    commit();
+    if (sel) document.querySelector<HTMLElement>(sel)?.focus();
+  }, 0);
 });
 
 $<HTMLInputElement>("hide-done").addEventListener("change", e => {
@@ -274,6 +342,7 @@ $("reset-week").addEventListener("click", () => {
   clearTimeout(armed); armed = 0;
   b.textContent = tr("reset"); b.classList.remove("armed");
   st.counts = {};
+  st.got = {};
   commit();
 });
 
